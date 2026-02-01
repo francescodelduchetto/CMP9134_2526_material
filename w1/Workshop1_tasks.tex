@@ -1,0 +1,252 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% Geometry setup
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{CMP1138: Foundations of Programming}}
+\rhead{\textbf{Week 13}}
+\lfoot{University of Lincoln}
+\rfoot{Page \thepage}
+
+% Color definitions
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{center}
+    \LARGE \textbf{Lab Sheet 13: Version Control with Git \& GitHub} \\
+    \vspace{0.5cm}
+    \large \textbf{Objectives}
+\end{center}
+
+\noindent By completing today's workshop, you will:
+\begin{itemize}
+    \item Configure \textbf{Git} on your local machine.
+    \item Create a \textbf{GitHub Account} and link it to your computer.
+    \item Understand how to \textbf{Ignore} C\# specific build files.
+    % \item Secure your \textbf{Assessment 3} work.
+    \item Learn how to \textbf{Fork} and contribute to open source projects.
+\end{itemize}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+%----------------------------------------------------------------------------------------
+%	TASK 1
+%----------------------------------------------------------------------------------------
+
+\section*{Task 1: First-Time Setup \& The Local Repo}
+
+\textbf{Goal:} Configure your identity and create your first local commit.
+
+\begin{enumerate}
+    \item \textbf{Open the Terminal:} Open Git Bash (Windows) or Terminal (Mac/Linux).
+    \item \textbf{Configure Identity:} (Run these one by one)
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{bash}
+git config --global user.name "Your Name"
+git config --global user.email "your.email@lincoln.ac.uk"
+    \end{minted}
+    \textit{Note that the email should match the one you will use for GitHub (we suggest your uni email). your name can be anything you like.}
+    
+    \item \textbf{Create a Project:}
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{bash}
+mkdir Week13_Lab
+cd Week13_Lab
+git init
+    \end{minted}
+    \textit{You should see a message saying "Initialized empty Git repository".}
+
+    \item \textbf{Create \& Commit:}
+    \begin{itemize}
+        \item Create a file named \texttt{hello.txt} and add some text to it.
+        \item Check status: \texttt{git status} (Should be red).
+        \item Stage it: \texttt{git add hello.txt} (Check status: Should be green).
+        \item Commit it: \texttt{git commit -m "My first commit"}
+    \end{itemize}
+
+    \item \textbf{Verify:} Run \texttt{git log} to see your commit history. Note the commit ID, author, date, and message.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%	TASK 2
+%----------------------------------------------------------------------------------------
+
+\section*{Task 2: Create a GitHub Account}
+
+\textbf{Goal:} Set up your cloud identity.
+
+\begin{itemize}
+    \item Go to \href{https://github.com/join}{github.com/join}.
+    \item Create an account using your \textbf{University Email Address} (recommended for academic benefits) or use your existing personal account if you prefer.
+    \item Verify your email address to ensure you can create repositories.
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	TASK 3
+%----------------------------------------------------------------------------------------
+
+\section*{Task 3: Connecting to the Cloud}
+
+\textbf{Goal:} Upload your local code to GitHub.
+
+\begin{enumerate}
+    \item \textbf{Create Remote Repo:} Click the \textbf{+} icon $\rightarrow$ \textbf{New Repository} on GitHub.
+    \begin{itemize}
+        \item Name: \texttt{CMP1138-Week13}
+        \item Visibility: \textbf{Public} (or Private).
+        \item \textbf{Do NOT} check "Add README" or ".gitignore" (keep it empty).
+    \end{itemize}
+    
+    \item \textbf{Link \& Push:}
+    Copy the URL provided by GitHub (ends in \texttt{.git}) and run:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{bash}
+git remote add origin <PASTE_YOUR_URL_HERE>
+git branch -M main
+git push -u origin main
+    \end{minted}
+    
+    \item \textbf{Verify:} Refresh your GitHub page. You should see your \texttt{hello.txt} file!
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%	TASK 4
+%----------------------------------------------------------------------------------------
+
+\section*{Task 4: The Full Workflow}
+
+\textbf{Goal:} Practice the cycle of modifying and updating code.
+
+\begin{enumerate}
+    \item \textbf{Modify:} Open \texttt{hello.txt} and add a second line of text.
+    \item \textbf{Add Code:} Create a new file \texttt{Program.cs} with a basic "Hello World" in C\#.
+    \item \textbf{Check Status:} Run \texttt{git status}.
+    \item \textbf{Stage All:} Run \texttt{git add .} to stage both changes.
+    \item \textbf{Commit:} Run \texttt{git commit -m "Added C\# program and updated text"}.
+    \item \textbf{Push:} Run \texttt{git push}.
+\end{enumerate}
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	TASK 5
+%----------------------------------------------------------------------------------------
+
+\section*{Task 5: Assessment 3 Backup (Using .gitignore)}
+
+\begin{center}
+\fbox{%
+\begin{minipage}{0.95\linewidth}
+\textbf{NOTE:} This task, or any git/Github usage, is \textbf{NOT required} for your final assessment. This is just for you to practice, learn git and establish good habits.
+\end{minipage}%
+}
+\end{center}
+
+
+\textbf{Goal:} Initialize a repository for your Final Assessment project and understand how to ignore build files.
+
+\begin{enumerate}
+    \item \textbf{Navigate:} Use \texttt{cd} to navigate to your Assessment 3 project folder.
+    
+    \item \textbf{Understanding .gitignore:}
+    \begin{itemize}
+        \item When you run a C\# program, Visual Studio creates folders like \texttt{bin/} and \texttt{obj/} containing compiled binaries.
+        \item \textbf{We do NOT want to version control these.} They take up huge amounts of space and are re-generated every time you click "Run".
+        \item The \texttt{.vs/} folder contains your personal window layouts and should also be ignored.
+    \end{itemize}
+
+    \item \textbf{Create the Ignore File:} Create a file named \texttt{.gitignore} (exactly that, no .txt extension) and add:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{text}
+bin/
+obj/
+.vs/
+*.user
+    \end{minted}
+
+    \item \textbf{Initialize \& Push:}
+    \begin{itemize}
+        \item Run \texttt{git init}.
+        \item Run \texttt{git add .} (Notice how bin/ and obj/ are NOT added!).
+        \item Commit and Push to a new \textbf{Private} repository named \texttt{CMP1138-Assessment}.
+    \end{itemize}
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%	TASK 6
+%----------------------------------------------------------------------------------------
+
+\section*{Task 6: Forking a Repository \& Pull Requests}
+
+\textbf{Goal:} Learn how to contribute to existing projects.
+
+\textbf{What is Forking?}
+Forking creates a personal copy of someone else's project. It allows you to freely experiment with changes without affecting the original project. This is the standard way to contribute to Open Source software.
+
+\textbf{What is a Pull Request (PR)?}
+When you modify your fork, the original repository doesn't change. To send your changes back, you must open a \textbf{Pull Request}.
+\begin{itemize}
+    \item Think of it like a journalist submitting an article to an editor. 
+    \item You are requesting that the owner ``\textbf{pulls}'' your changes into their project.
+    \item This allows for code review and discussion before the changes are accepted.
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Task Steps:}
+
+\begin{enumerate}
+    \item \textbf{Find the Repo:} Go to \href{https://github.com/octocat/Spoon-Knife}{https://github.com/octocat/Spoon-Knife}. This is a standard test repo provided by GitHub.
+    
+    \item \textbf{Fork It:} Click the \textbf{"Fork"} button in the top-right corner. This creates a copy under \textit{your} account.
+    
+    \item \textbf{Clone Your Fork:}
+    \begin{itemize}
+        \item On your version of the page, click \textbf{Code} and copy the URL.
+        \item In your terminal: \texttt{git clone <YOUR\_FORK\_URL>}
+    \end{itemize}
+    
+    \item \textbf{Modify \& Push:}
+    \begin{itemize}
+        \item Create a file named \texttt{Week13\_<YourName>.txt} inside the folder.
+        \item Add, Commit, and Push.
+        \item Go to GitHub and see that the change exists on \textit{your} fork, but not the original \texttt{octocat} repository.
+    \end{itemize}
+
+    \item \textbf{Create a Pull Request:}
+    \begin{itemize}
+        \item Go to your fork on GitHub.
+        \item Click the \textbf{Compare \& pull request} button, or go to the \textbf{Pull requests} tab and click \textbf{New pull request}.
+        \item Add a title and description, then click \textbf{Create pull request}.
+        \item This notifies the original repository owner of your proposed changes. They can review and choose to merge them.
+        \item \textbf{Note:} Pull Requests can be created also to merge changes from a branch into the main branch of your own repository. It provides a way for the team to review changes before integrating them.
+    \end{itemize} 
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%	RESOURCES
+%----------------------------------------------------------------------------------------
+
+\section*{Further Resources}
+
+\begin{itemize}
+    \item \textbf{Visualizing Git:} \href{https://git-school.github.io/visualizing-git/}{https://git-school.github.io/visualizing-git/} (Great for understanding branching).
+    \item \textbf{Oh My Git!} \href{https://ohmygit.org/}{https://ohmygit.org/} (An open source game to learn Git).
+    \item \textbf{GitHub Docs (Forking):} \href{https://docs.github.com/en/get-started/quickstart/fork-a-repo}{https://docs.github.com/en/get-started/quickstart/fork-a-repo}
+    \item \textbf{GitHub Docs (Pull Requests):} \href{https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests}{https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests}
+    \item \textbf{Git Cheatsheet:} \href{https://education.github.com/git-cheat-sheet-education.pdf}{https://education.github.com/git-cheat-sheet-education.pdf}
+\end{itemize}
+
+\end{document}
