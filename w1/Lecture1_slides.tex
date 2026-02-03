@@ -92,6 +92,17 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{Main Topics Covered}
+    \begin{itemize}
+        \item Project \textbf{management} principles and practices for software development.
+        \item \textbf{Planning and specification} of software projects.
+        \item \textbf{Software design} and architectural principles.
+        \item \textbf{Software testing} and quality assurance.
+        \item \textbf{Software maintenance} and evolution.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
     \frametitle{Module Delivery Team}
         \textbf{Dr Francesco Del Duchetto}
         \begin{itemize}
@@ -422,9 +433,26 @@ specification} through to \textit{maintaining} the system after it has gone into
         \draw[arrow] ([xshift=-1cm]tst.south) |- (mnt.west);
 
     \end{tikzpicture}
-    
-    \vspace{0.3cm}
-    \scriptsize{Sequential flow: Output of one phase is the input for the next.}
+\end{frame}
+
+\begin{frame}
+\frametitle{Waterfall Model}
+\footnotesize
+    \begin{block}{Qualities}
+        \begin{itemize}
+            \item Sequential design process: easy to understand and manage.
+            \item Each phase must be completed before the next begins: easy to organise and coordinate.
+            \item Documentation-centric: suitable for projects with well-defined requirements.
+        \end{itemize}
+    \end{block}
+
+    \begin{alertblock}{Limitations}
+        \begin{itemize}
+            \item Inflexible to changes: not ideal for projects with evolving requirements.
+            \item Late testing phase: issues may be discovered late in the process.
+            \item Not suitable for complex or long-term projects: lacks iterative feedback.
+        \end{itemize}
+    \end{alertblock}
 \end{frame}
 
 % V-Model diagram
@@ -478,6 +506,25 @@ specification} through to \textit{maintaining} the system after it has gone into
 
     \end{tikzpicture}
     }
+\end{frame}
+\begin{frame}
+\frametitle{The V-Model}
+\footnotesize
+    \begin{block}{Qualities}
+        \begin{itemize}
+            \item Focus on testing \& quality: each development phase has a corresponding testing phase. \textit{Solves waterfall's late testing issue.}
+            \item Sequential and linear phases: easy to organise and coordinate.
+            \item Well suited for projects with clearly defined requirements.
+        \end{itemize}
+    \end{block}
+
+    \begin{alertblock}{Limitations}
+        \begin{itemize}
+            \item Inflexible to changes: not ideal for projects with evolving requirements. 
+            \item Assumes requirements are well understood upfront.
+            \item Not suitable for complex or long-term projects: lacks iterative feedback.
+        \end{itemize}
+    \end{alertblock}
 \end{frame}
 
 % Incremental
@@ -540,6 +587,24 @@ specification} through to \textit{maintaining} the system after it has gone into
     \small System is broken down into small, manageable portions. Functional software is produced early.
 \end{frame}
 
+\begin{frame}
+\frametitle{Incremental Model}
+\footnotesize
+    \begin{block}{Qualities}
+        \begin{itemize}
+            \item Each increment delivers a functional part of the system: allows for early delivery of useful software. \textit{Solves waterfall's late delivery issue.}
+            \item Allows for flexibility and adaptability as each increment can be adjusted based on feedback. \textit{Solves waterfall's and v-model's inflexibility issue.}
+            \item Easier to manage risks by breaking down the project into smaller parts.
+        \end{itemize}
+    \end{block}
+
+    \begin{alertblock}{Limitations}
+        \begin{itemize}
+            \item Requires careful planning and design to ensure increments integrate well.
+            \item May lead to higher overall costs due to repeated phases for each increment. Hence, not suitable for very small projects where overhead may outweigh benefits.      \end{itemize}
+    \end{alertblock}
+\end{frame}
+
 % Spiral
 \begin{frame}[fragile]
     \frametitle{Spiral Model}
@@ -565,6 +630,26 @@ specification} through to \textit{maintaining} the system after it has gone into
         % Annotation
         \node[align=center] at (0, -4) {Risk-driven process iteratively passing through phases.\\Radius grows with cost/time.};
     \end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+\frametitle{Spiral Model}
+\footnotesize
+    \begin{block}{Qualities}
+        \begin{itemize}
+            \item Focus on early risk identification and mitigation: suitable for high-risk projects.
+            \item Allows for iterative development and refinement based on customer's feedback.
+            \item Flexible and adaptable to changing requirements at various stage of development.
+        \end{itemize}
+    \end{block}
+
+    \begin{alertblock}{Limitations}
+        \begin{itemize}
+            \item Requires careful planning and design to ensure increments integrate well.
+            \item May lead to higher overall costs due to amount of risk assessments and iterations. Hence, not suitable for very small projects where overhead may outweigh benefits.      
+            \item Risk assessment and management require expertise and experience.
+        \end{itemize}
+    \end{alertblock}
 \end{frame}
 
 % Agile Diagram
@@ -618,8 +703,28 @@ specification} through to \textit{maintaining} the system after it has gone into
 
     \end{tikzpicture}
     }
+    Commonly described as a set of principles or a phylosophy rather than a strict methodology.
 \end{frame}
 
+\begin{frame}
+\frametitle{Agile Process}
+\footnotesize
+    \begin{block}{Qualities}
+        \begin{itemize}
+            \item Focus on customer collaboration and responsiveness to change: suitable for projects with evolving requirements.
+            \item Allows for iterative development and frequent delivery of working software.
+            \item Emphasises teamwork, communication, and continuous improvement.
+        \end{itemize}
+    \end{block}
+
+    \begin{alertblock}{Limitations}
+        \begin{itemize}
+            \item Requires active customer involvement throughout the project.
+            \item May lead to scope creep if not properly managed.
+            \item Less emphasis on documentation may lead to challenges in knowledge transfer and maintenance.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
 
 \begin{frame}
     \frametitle{Next Steps}
