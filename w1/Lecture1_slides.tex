@@ -11,18 +11,36 @@
         \usebeamerfont{section in head/foot}
         \hspace{0.5cm}
         \ifnum\insertframenumber<20
-            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Access Code: 123456}}
+            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 123456}}
         \fi
         \hspace{0.5cm}
     \end{beamercolorbox}
 }
+% Footline with page numbers
+\setbeamertemplate{footline}{
+    \leavevmode%
+    \hbox{%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,left]{author in head/foot}%
+            \usebeamerfont{author in head/foot}\hspace*{0.5em}\insertshortauthor
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+            \usebeamerfont{title in head/foot}\insertshorttitle
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+            \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+            \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+        \end{beamercolorbox}}%
+    \vskip0pt%
+}
 \usepackage[utf8]{inputenc}
 \usepackage[table]{xcolor}
+\usepackage{colortbl}
 \usepackage{minted}
 \usepackage{lmodern}
 \usepackage{tgheros}
 \usepackage{hyperref}
 \usepackage{tikz}
+\usepackage[table]{xcolor}
 \usetikzlibrary{shapes, arrows, positioning, shadows}
 
 \renewcommand*\familydefault{\sfdefault}
@@ -39,7 +57,7 @@
 %------------------------------------------------------------
 % Title Page Information
 %------------------------------------------------------------
-\title[CMP9134 - Week 1]{Introduction \& Software Development Life Cycle}
+\title[CMP9134 - Week 1]{Module Introduction \& Software Development Life Cycle (SDLC)}
 \subtitle{CMP9134: Software Engineering}
 \author[Francesco Del Duchetto]{Dr Francesco Del Duchetto\\Lecturer in Robotics and Autonomous Systems}
 \institute[University of Lincoln]{University of Lincoln}
@@ -59,7 +77,11 @@
     \tableofcontents
 \end{frame}
 
-%--- LEARNING AIMS ---
+
+%------------------------------------------------------------
+\section{Module Overview}
+%------------------------------------------------------------
+ %--- LEARNING AIMS ---
 \begin{frame}
     \frametitle{Module Learning Outcomes}
     \begin{itemize}
@@ -69,10 +91,6 @@
     \end{itemize}
 \end{frame}
 
-%------------------------------------------------------------
-\section{Module Overview}
-%------------------------------------------------------------
- 
 \begin{frame}
     \frametitle{Module Delivery Team}
         \textbf{Dr Francesco Del Duchetto}
@@ -98,26 +116,33 @@
     \frametitle{Module Syllabus (Weeks 1-5)}
     \begin{table}
         \centering
-        \rowcolors{2}{gray!20}{white}
         \tiny
+        % \rowcolors{3}{gray!20}{white}
         \begin{tabular}{|c|l|l|l|}
                     \hline
                     \rowcolor{blue!20}
                     \textbf{W} & \textbf{Date} & \textbf{Lecture Topic} & \textbf{Workshop} \\
                     \hline
-                    1 & 06/02/25 & Intro \& Software Development Life Cycle & Versioning control (GitHub) \\ \hline
-                    2 & 13/02/25 & Agile Frameworks & Agile Setup \\ \hline
-                    3 & 20/02/25 & Software Requirements & Requirement Analysis \\ \hline
-                    4 & 27/02/25 & Software Modelling \& OOP & System Architecture \\ \hline
-                    5 & 06/03/25 & Pattern \& Reuse & Structural Design \\ \hline
-                    6 & 13/03/25 & HCI \& Design Thinking & UI Prototyping \\ \hline
-                    7 & 20/03/25 & Containerisation & Docker \& devcontainers \\ \hline
-                    8 & 27/03/25 & Software Testing & Unit Testing \\ \hline
-                    \multicolumn{4}{|c|}{\textit{Break - No Lectures}} \\ \hline
-                    12 & 24/04/25 & DevOps \& CI/CD & Test Driven Development \\ \hline
-                    13 & 01/05/25 & Continuous Deployment & Automatic Deployment \\ \hline
-                    14 & 08/05/25 & Evolution \& Legacy & Refactoring \\ \hline
-                    15 & 15/05/25 & Legal, Ethical, Professional \& Social Issues & Project support \\ \hline
+                    \rowcolor{gray!20}
+                    1 & 06/02/26 & \textbf{Intro \& Software Development Life Cycle} & \textbf{Versioning control (GitHub)} \\ \hline
+                    2 & 13/02/26 & \textbf{Agile Frameworks} & \textbf{Agile Setup} \\ \hline
+                    \rowcolor{gray!20}
+                    3 & 20/02/26 & \textbf{Software Requirements} & \textbf{Requirement Analysis} \\ \hline
+                    4 & 27/02/26 & \textbf{Software Modelling \& OOP} & \textbf{System Architecture} \\ \hline
+                    \rowcolor{gray!20}
+                    5 & 06/03/26 & \textbf{Pattern \& Reuse} & \textbf{Structural Design} \\ \hline
+                    6 & 13/03/26 & \textbf{HCI \& Design Thinking} & \textbf{UI Prototyping} \\ \hline
+                    \rowcolor{gray!20}
+                    7 & 20/03/26 & \textbf{Containerisation} & \textbf{Docker \& devcontainers} \\ \hline
+                    8 & 27/03/26 & \textbf{Software Testing} & \textbf{Unit Testing} \\ \hline
+                    \rowcolor{gray!60}
+                    \multicolumn{4}{|c|}{\textit{Break - No Lectures!}} \\ \hline
+                    12 & 24/04/26 & \textbf{DevOps \& CI/CD} & \textbf{Test Driven Development} \\ \hline
+                    \rowcolor{gray!20}
+                    13 & 01/05/26 & \textbf{Continuous Deployment} & \textbf{Automatic Deployment} \\ \hline
+                    14 & 08/05/26 & \textbf{Evolution \& Legacy} & \textbf{Refactoring} \\ \hline
+                    \rowcolor{gray!20}
+                    15 & 15/05/26 & \textbf{Legal, Ethical, Professional \& Social Issues} & \textbf{Project support} \\ \hline
                 \end{tabular}
     \end{table}
 \end{frame}
@@ -125,14 +150,19 @@
 \begin{frame}
     \frametitle{Assessment}
     \begin{itemize}
-        \item \textbf{Assessment 1 (100\%):} Design, develop, evaluate and document a comprehensive web application for searching open-license media.
+        \item \textbf{Assessment 1 (100\%):} Design, develop, evaluate and document a comprehensive web application for remotely monitor and control an autonomous robot.
         \item \textbf{Deliverables:}
         \begin{enumerate}
             \item Public GitHub repository (source code, documentation).
             \item Detailed project report (PDF).
             \item 5-minute video demonstration.
         \end{enumerate}
-        \item \textbf{Note:} This is an individual assessment.
+        \item \textbf{Some notes:} 
+        \begin{itemize}
+            \item This is an individual assessment.
+            \item Documentation will be provided on BlackBoard \textit{soon}.
+            \item Workshops tasks will be grounded on the project, so you can have a headstart on the development from the beginning.
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
@@ -149,6 +179,22 @@
 \end{frame}
 
 
+\begin{frame}
+    \frametitle{Reference books}
+    This is a \textit{subset} of relevant books available at the University Library (physical or e-books):
+    
+    \vspace{0.3cm}
+    \centering
+    \begin{tabular}{ccc}
+        \href{https://library.lincoln.ac.uk/items/178762}{\includegraphics[height=3.5cm]{imgs/sommerville.jpeg}} &
+        \href{https://library.lincoln.ac.uk/items/247002}{\includegraphics[height=3.5cm]{imgs/dev-design.jpg}} &
+        \href{https://library.lincoln.ac.uk/items/156283}{\includegraphics[height=3.5cm]{imgs/learn-agile.jpeg}} \\
+        \tiny Ian Sommerville & \tiny Dooley, John F. & \tiny Stellman \& Greene \\
+        \tiny \textit{\textbf{Software Engineering}} & \tiny \textit{\textbf{Software Development, Design,}} & \tiny \textit{\textbf{Learning Agile}} \\
+        \tiny 10th Edition, 2016 & \tiny \textit{\textbf{and Coding}, 3rd Ed., 2024} & \tiny 1st Edition, 2014 \\
+    \end{tabular}
+\end{frame}
+
 
 %------------------------------------------------------------
 \section{What is Software Engineering?}
@@ -159,10 +205,24 @@
     \begin{itemize}
         \item \textbf{Scientific method:} Discovery and organisation of knowledge by means of observation and experimentation.
         \item \textbf{Engineering:} The application of scientific methods to solving real-world problems.
-        \item \textbf{Software Engineering:} Applies empirical and scientific approaches to solve practical problems in software.
+        \item \large \textbf{Software Engineering:} Applies empirical and scientific approaches to solve practical problems in software.
     \end{itemize}
     \vspace{0.5cm}
     \textit{``A Bad System Will Beat a Good Person Every Time''} - W. Edwards Deming.
+\end{frame}
+
+\begin{frame}{Scope}
+    \begin{block}{Aim}
+        Making our software systems more efficient, scalable, reproducible, economic, accessible, maintainable,
+reliable, secure, etc.
+    \end{block}
+
+        \begin{block}{}
+        Software engineering is \textbf{concerned with all aspects of software production}, from the early stages of \textit{system
+specification} through to \textit{maintaining} the system after it has gone into use
+    \end{block}
+
+
 \end{frame}
 
 \begin{frame}
@@ -228,7 +288,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{The Project Charter}
+    \frametitle{Planning: The Project Charter}
     A document outlining objectives, scope, stakeholders, and high-level requirements.
     \begin{block}{Components}
         \begin{itemize}
@@ -241,7 +301,17 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Work Breakdown Structure (WBS)}
+    \frametitle{Planning: Risk Management}
+    Identifying, assessing, and mitigating potential risks.
+    \begin{itemize}
+        \item \textbf{Monitoring:} Tracking progress vs planned performance.
+        \item \textbf{Issue Tracking:} Using tools like Jira or GitHub Issues to track defects.
+        \item \textbf{Burndown Charts:} Visualizing work completed vs work remaining.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Analysis/Design: Work Breakdown Structure (WBS)}
     A hierarchical decomposition of project deliverables into smaller, manageable components.
     \begin{itemize}
         \item Level 1: Product Vision
@@ -251,7 +321,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Scheduling and Estimation}
+    \frametitle{Analysis/Design: Scheduling and Estimation}
     \begin{itemize}
         \item \textbf{Project Schedule:} Timeline identifying tasks, dependencies, and resources.
         \item \textbf{Tools:} Microsoft Project, GanttPRO, Trello (Kanban), Jira.
@@ -265,14 +335,45 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Risk Management}
-    Identifying, assessing, and mitigating potential risks.
+    \frametitle{Implementation/Testing: Monitoring Progress}
     \begin{itemize}
-        \item \textbf{Monitoring:} Tracking progress vs planned performance.
-        \item \textbf{Issue Tracking:} Using tools like Jira or GitHub Issues to track defects.
-        \item \textbf{Burndown Charts:} Visualizing work completed vs work remaining.
+        \item \textbf{Earned Value Analysis (EVA):} Combines scope, schedule, and cost to assess project performance.
+        \item \textbf{Key Metrics:}
+        \begin{itemize}
+            \item Planned Value (PV)
+            \item Earned Value (EV)
+            \item Actual Cost (AC)
+        \end{itemize}
+        \item \textbf{Formulas:}
+        \begin{itemize}
+            \item Schedule Variance (SV) = EV - PV
+            \item Cost Variance (CV) = EV - AC
+            \item Schedule Performance Index (SPI) = EV / PV
+            \item Cost Performance Index (CPI) = EV / AC
+        \end{itemize}
     \end{itemize}
 \end{frame}
+
+\begin{frame}
+    \frametitle{Implementation/Testing: Tracking Issues}
+    \begin{itemize}
+        \item \textbf{Issue Tracking Tools:} Jira, GitHub Issues, Bugzilla.
+        \item \textbf{Burndown Charts:} Visual representation of work completed vs work remaining.
+        \item \textbf{Purpose:} Monitor progress, identify bottlenecks, and adjust plans.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Maintenance: Resource Allocation}
+    There are 4 types of software maintenance: \textbf{corrective}, \textbf{adaptive}, \textbf{perfective}, and \textbf{preventive}.
+    \\\vspace{0.5cm}
+    \begin{itemize} 
+        \item Allocate resources for bug fixes, updates, and enhancements.
+        \item Use historical data to estimate maintenance effort.
+        \item Plan for long-term support and scalability.
+    \end{itemize}
+\end{frame}
+
 
 %------------------------------------------------------------
 \section{SDLC Models}
@@ -471,6 +572,7 @@
     \frametitle{Agile Process}
     \centering
     \resizebox{0.85\textwidth}{!}{
+    \centering
     \begin{tikzpicture}[
         scale=1,
         every node/.style={font=\sffamily\bfseries\small, text=white, align=center},
@@ -523,15 +625,16 @@
     \frametitle{Next Steps}
     \begin{itemize}
         \item \textbf{This Week's Workshop:} Learning Git (Version Control).
-        \item \textbf{Reading:} Sommerville, \textit{Software Engineering 9th Edition}, Chapter 1.
-        \item \textbf{Next Week:} Software Process \& Project Planning.
+        % \item \textbf{Reading:} Sommerville, \textit{Software Engineering 9th Edition}, Chapter 1.
+        \item \textbf{Next Week:} Agile Frameworks.
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{Q \& A}
     \begin{center}
-        \Huge Any Questions?
+        \Huge Any Questions?\\\vspace{0.5cm} 
+        \normalsize fdelduchetto@lincoln.ac.uk
     \end{center}
 \end{frame}
 
