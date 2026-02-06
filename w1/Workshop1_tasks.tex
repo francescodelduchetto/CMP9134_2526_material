@@ -13,8 +13,8 @@
 % Header and Footer
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{\textbf{CMP1138: Foundations of Programming}}
-\rhead{\textbf{Week 13}}
+\lhead{\textbf{CMP9134: Software Engineering}}
+\rhead{\textbf{Week 1}}
 \lfoot{University of Lincoln}
 \rfoot{Page \thepage}
 
@@ -28,7 +28,7 @@
 %----------------------------------------------------------------------------------------
 
 \begin{center}
-    \LARGE \textbf{Lab Sheet 13: Version Control with Git \& GitHub} \\
+    \LARGE \textbf{Lab Sheet 1: Version Control with Git \& GitHub} \\
     \vspace{0.5cm}
     \large \textbf{Objectives}
 \end{center}
@@ -37,7 +37,8 @@
 \begin{itemize}
     \item Configure \textbf{Git} on your local machine.
     \item Create a \textbf{GitHub Account} and link it to your computer.
-    \item Understand how to \textbf{Ignore} C\# specific build files.
+    \item Understand the basic Git workflow: \textbf{Add}, \textbf{Commit}, and \textbf{Push}.
+    % \item Understand how to \textbf{Ignore} specific build files.
     % \item Secure your \textbf{Assessment 3} work.
     \item Learn how to \textbf{Fork} and contribute to open source projects.
 \end{itemize}
@@ -64,16 +65,17 @@ git config --global user.email "your.email@lincoln.ac.uk"
     \textit{Note that the email should match the one you will use for GitHub (we suggest your uni email). your name can be anything you like.}
     
     \item \textbf{Create a Project:}
+    This will be your first local repository. You can create it anywhere on your computer, and you can use this as the repository for your final CMP9134 project:
     \begin{minted}[bgcolor=lightgray, fontsize=\small]{bash}
-mkdir Week13_Lab
-cd Week13_Lab
+mkdir CMP9134_final_project
+cd CMP9134_final_project
 git init
     \end{minted}
     \textit{You should see a message saying "Initialized empty Git repository".}
 
     \item \textbf{Create \& Commit:}
     \begin{itemize}
-        \item Create a file named \texttt{hello.txt} and add some text to it.
+        \item Create a file named \texttt{hello.txt} and add some text to it. On a windows terminal, you can use: \texttt{echo "" > hello.txt} and then edit it with Notepad. You can also create and edit the file with any editor you like.
         \item Check status: \texttt{git status} (Should be red).
         \item Stage it: \texttt{git add hello.txt} (Check status: Should be green).
         \item Commit it: \texttt{git commit -m "My first commit"}
@@ -92,7 +94,7 @@ git init
 
 \begin{itemize}
     \item Go to \href{https://github.com/join}{github.com/join}.
-    \item Create an account using your \textbf{University Email Address} (recommended for academic benefits) or use your existing personal account if you prefer.
+    \item Create an account using your \textbf{University Email Address} (recommended for academic benefits) or use your existing personal account if you already have one.
     \item Verify your email address to ensure you can create repositories.
 \end{itemize}
 
@@ -107,8 +109,8 @@ git init
 \begin{enumerate}
     \item \textbf{Create Remote Repo:} Click the \textbf{+} icon $\rightarrow$ \textbf{New Repository} on GitHub.
     \begin{itemize}
-        \item Name: \texttt{CMP1138-Week13}
-        \item Visibility: \textbf{Public} (or Private).
+        \item Name: \texttt{CMP9134\_final\_project} (or any name you like).
+        \item Visibility: \textbf{Public} (or Private -- note that your final project repository should by public at the time of submission at the end of the semester!).
         \item \textbf{Do NOT} check "Add README" or ".gitignore" (keep it empty).
     \end{itemize}
     
@@ -133,10 +135,10 @@ git push -u origin main
 
 \begin{enumerate}
     \item \textbf{Modify:} Open \texttt{hello.txt} and add a second line of text.
-    \item \textbf{Add Code:} Create a new file \texttt{Program.cs} with a basic "Hello World" in C\#.
+    \item \textbf{Add Code:} Create a new file \texttt{MyCode.py} which prints a basic "Hello World" in Python.
     \item \textbf{Check Status:} Run \texttt{git status}.
     \item \textbf{Stage All:} Run \texttt{git add .} to stage both changes.
-    \item \textbf{Commit:} Run \texttt{git commit -m "Added C\# program and updated text"}.
+    \item \textbf{Commit:} Run \texttt{git commit -m "Added Python program and updated text"}.
     \item \textbf{Push:} Run \texttt{git push}.
 \end{enumerate}
 
@@ -146,50 +148,50 @@ git push -u origin main
 %	TASK 5
 %----------------------------------------------------------------------------------------
 
-\section*{Task 5: Assessment 3 Backup (Using .gitignore)}
+% \section*{Task 5: Add a .gitignore}
 
-\begin{center}
-\fbox{%
-\begin{minipage}{0.95\linewidth}
-\textbf{NOTE:} This task, or any git/Github usage, is \textbf{NOT required} for your final assessment. This is just for you to practice, learn git and establish good habits.
-\end{minipage}%
-}
-\end{center}
+% % \begin{center}
+% % \fbox{%
+% % \begin{minipage}{0.95\linewidth}
+% % \textbf{NOTE:} This task, or any git/Github usage, is \textbf{NOT required} for your final assessment. This is just for you to practice, learn git and establish good habits.
+% % \end{minipage}%
+% % }
+% % \end{center}
 
 
-\textbf{Goal:} Initialize a repository for your Final Assessment project and understand how to ignore build files.
+% \textbf{Goal:} Initialize a repository for your Final Assessment project and understand how to ignore build files.
 
-\begin{enumerate}
-    \item \textbf{Navigate:} Use \texttt{cd} to navigate to your Assessment 3 project folder.
+% \begin{enumerate}
+%     \item \textbf{Navigate:} Use \texttt{cd} to navigate to your Assessment 3 project folder.
     
-    \item \textbf{Understanding .gitignore:}
-    \begin{itemize}
-        \item When you run a C\# program, Visual Studio creates folders like \texttt{bin/} and \texttt{obj/} containing compiled binaries.
-        \item \textbf{We do NOT want to version control these.} They take up huge amounts of space and are re-generated every time you click "Run".
-        \item The \texttt{.vs/} folder contains your personal window layouts and should also be ignored.
-    \end{itemize}
+%     \item \textbf{Understanding .gitignore:}
+%     \begin{itemize}
+%         \item When you run a C\# program, Visual Studio creates folders like \texttt{bin/} and \texttt{obj/} containing compiled binaries.
+%         \item \textbf{We do NOT want to version control these.} They take up huge amounts of space and are re-generated every time you click "Run".
+%         \item The \texttt{.vs/} folder contains your personal window layouts and should also be ignored.
+%     \end{itemize}
 
-    \item \textbf{Create the Ignore File:} Create a file named \texttt{.gitignore} (exactly that, no .txt extension) and add:
-    \begin{minted}[bgcolor=lightgray, fontsize=\small]{text}
-bin/
-obj/
-.vs/
-*.user
-    \end{minted}
+%     \item \textbf{Create the Ignore File:} Create a file named \texttt{.gitignore} (exactly that, no .txt extension) and add:
+%     \begin{minted}[bgcolor=lightgray, fontsize=\small]{text}
+% bin/
+% obj/
+% .vs/
+% *.user
+%     \end{minted}
 
-    \item \textbf{Initialize \& Push:}
-    \begin{itemize}
-        \item Run \texttt{git init}.
-        \item Run \texttt{git add .} (Notice how bin/ and obj/ are NOT added!).
-        \item Commit and Push to a new \textbf{Private} repository named \texttt{CMP1138-Assessment}.
-    \end{itemize}
-\end{enumerate}
+%     \item \textbf{Initialize \& Push:}
+%     \begin{itemize}
+%         \item Run \texttt{git init}.
+%         \item Run \texttt{git add .} (Notice how bin/ and obj/ are NOT added!).
+%         \item Commit and Push to a new \textbf{Private} repository named \texttt{CMP1138-Assessment}.
+%     \end{itemize}
+% \end{enumerate}
 
 %----------------------------------------------------------------------------------------
 %	TASK 6
 %----------------------------------------------------------------------------------------
 
-\section*{Task 6: Forking a Repository \& Pull Requests}
+\section*{Task 5: Forking a Repository \& Pull Requests}
 
 \textbf{Goal:} Learn how to contribute to existing projects.
 
