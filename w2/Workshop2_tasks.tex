@@ -1,0 +1,200 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% Geometry setup
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{CMP9134: Software Engineering}}
+\rhead{\textbf{Week 2}}
+\lfoot{University of Lincoln}
+\rfoot{Page \thepage}
+
+% Color definitions
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%   TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{center}
+    \LARGE \textbf{Lab Sheet 2: Agile Working} \\
+    \vspace{0.5cm}
+    \large \textbf{Objectives}
+\end{center}
+
+\noindent By completing today's workshop, you will:
+\begin{itemize}
+    \item Configure a \textbf{Trello Board} specifically for your Assessment 1 (Robot System).
+    \item Practice \textbf{"Personal Scrum"} by adapting Agile roles for a solo developer.
+    \item Breakdown the Assessment Brief into \textbf{User Stories} and \textbf{Tasks}.
+    \item Integrate \textbf{GitHub Issues} with Trello to link your planning with your code.
+\end{itemize}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Introduction: The Solo Agile Mindset}
+While Scrum is typically a team sport, its principles are vital for managing individual coursework. In this module, you are wearing three hats simultaneously:
+\begin{enumerate}
+    \item \textbf{The Product Owner:} You decide \textit{what} to build (based on the Assessment Brief).
+    \item \textbf{The Scrum Master:} You ensure you are working efficiently and removing distractions.
+    \item \textbf{The Developer:} You write the code and tests.
+\end{enumerate}
+Today, we set up the tools to manage this workflow.
+
+%----------------------------------------------------------------------------------------
+%   TASK 1
+%----------------------------------------------------------------------------------------
+
+\section*{Task 1: Project Board Setup}
+
+\textbf{Goal:} Create a Trello board tailored for the Robot Management System.
+
+\begin{enumerate}
+    \item \textbf{Log in to Trello:} Go to \href{https://trello.com}{trello.com} (use the account created in the lecture/workshop).
+    \item \textbf{Create a New Board:}
+    \begin{itemize}
+        \item Click \textbf{Create new board}.
+        \item Title: \texttt{CMP9134 - Robot Management System}.
+        \item Visibility: Workspace or Public (Private is fine, but you may need want to make it public to add to your assessment report for the final submission).
+    \end{itemize}
+    \item \textbf{Configure Lists for Solo Work:}
+    Rename the standard lists to match a "Personal Kanban" flow. Create the following columns left-to-right (Click on add list):
+    \begin{itemize}
+        \item \textbf{Product Backlog:} (All the ideas and requirements from the Brief).
+        \item \textbf{Sprint Backlog (This Week):} (What you realistically plan to finish this week).
+        \item \textbf{In Progress (Today):} (The 1 or 2 tasks you are working on \textit{right now}. Limit this to max 2!).
+        \item \textbf{Waiting/Blocked:} (Tasks waiting for external help, e.g., "Ask lecturer about API").
+        \item \textbf{Done:} (Completed tasks).
+    \end{itemize}
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 2
+%----------------------------------------------------------------------------------------
+
+\section*{Task 2: From Assessment Brief to Backlog}
+
+\textbf{Goal:} Breakdown the Assessment 1 requirements into Agile User Stories.
+
+\noindent Open the \textbf{Assessment 01 Framework Brief} (available on Blackboard). You need to extract the requirements and turn them into cards in your \textbf{Product Backlog} list.
+
+\vspace{0.3cm}
+\noindent \textbf{Template for User Stories:}
+\textit{"As a $<$Role$>$, I want $<$Feature$>$, so that $<$Benefit$>$."}
+
+\vspace{0.3cm}
+\noindent \textbf{Action:} Create at least \textbf{5 cards} in your Backlog based on the brief. Use the examples below as a guide:
+
+\begin{enumerate}
+    \item \textbf{Authentication (Security):}
+    \textit{"As a User, I want to log in with a secure password, so that unauthorized people cannot control the robot."}
+    \item \textbf{RBAC (Access Control):}
+    \textit{"As a 'Viewer', I want to see the robot status but NOT move it, so that I don't accidentally disrupt a mission."}
+    \item \textbf{Dashboard (UI):}
+    \textit{"As a Commander, I want to see the robot's location on a 2D grid, so that I can plan its path."}
+    \item \textbf{Telemetry (API Integration):}
+    \textit{"As a User, I want to see the current battery level, so I know when the robot needs charging."}
+    \item \textbf{Logging (Reliability):}
+    \textit{"As an Auditor, I want a log of all commands sent, so that I can investigate accidents."}
+\end{enumerate}
+
+\noindent \textit{Tip: Don't forget non-functional requirements! Add cards for "Set up Docker Container", "Configure CI/CD Pipeline", and "Write AI Verification Log".}
+
+%----------------------------------------------------------------------------------------
+%   TASK 3
+%----------------------------------------------------------------------------------------
+
+\section*{Task 3: GitHub Integration (Issues \& Trello)}
+
+\textbf{Goal:} Link your project management (Trello) with your code repository (GitHub).
+
+\noindent \textbf{Why?} In professional environments, you never write code without a ticket. Linking them allows you to click a card in Trello and see the exact Pull Request or Branch associated with it.
+
+\begin{enumerate}
+    \item \textbf{Create your Assessment Repository if you haven't already in Week 1!}).
+    \item \textbf{Enable the GitHub Power-Up in Trello:}
+    \begin{itemize}
+        \item On your Trello Board, click the \textbf{... Menu} (top right) $\rightarrow$ \textbf{Power-Ups} (the small shuttle icon).
+        \item Search for \textbf{GitHub}.
+        \item Click \textbf{Add} and then \textbf{Settings} to authorize your GitHub account.
+        \item Click \textbf{Edit Power-Up Settings}, \textbf{Add Repo}, then link your GitHub account. 
+        \item Select your \texttt{CMP9134\_Assessment1} repository to link it.
+    \end{itemize}
+
+    \item \textbf{The Workflow (to replicate for each new issue and card pair):}
+    \begin{enumerate}
+        \item Go to your GitHub repository and create a new \textbf{Issue} (e.g., add title "Implement Authentication", description and any other details). Issues are a way to plan, discuss, and track a specific part of your work. Use the following guidance for creating the issue: \url{https://docs.github.com/en/issues/tracking-your-work-with-issues/learning-about-issues/quickstart}.
+        \item Fill in the description with the user story and acceptance criteria.
+        \item Save the Issue.
+        \item Open a card in Trello, or select one of the previously defined ones (e.g., the "Authentication" story).
+        \item Click the \textbf{Power-Ups} button on the bottom side of the card.
+        \item Click the \textbf{GitHub} button.
+        \item Select \textbf{Attach Issue} and select the corresponding GitHub Issue you just created.
+        \item You should now see the GitHub Issue linked to your Trello card. You can click on it to view details or navigate to GitHub directly.
+    \end{enumerate}
+    
+    \item \textbf{Linking Branches (Optional but Recommended):}
+    When you start coding, you can create a branch specifically for that issue (e.g., \texttt{feature/auth-login}). You can attach this branch to the Trello card using the same GitHub button, giving you full traceability.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 4
+%----------------------------------------------------------------------------------------
+
+\section*{Task 4: The "Personal Scrum" Ritual}
+
+\textbf{Goal:} Plan your first Sprint.
+
+\noindent You don't have a team to hold meetings with, so you must hold them with yourself.
+
+\begin{enumerate}
+    \item \textbf{Sprint Planning:}
+    Look at your \textbf{Product Backlog}. Move the top 3 items you want to achieve \textit{this week} into \textbf{Sprint Backlog}.
+    \textit{(e.g., "Set up Docker Environment" and "Basic Hello World API Connection").}
+    
+    \item \textbf{Daily Stand-up (Morning Routine):}
+    Every time you sit down to work on this module:
+    \begin{itemize}
+        \item Look at \textbf{In Progress}. Is it empty?
+        \item If yes, pull \textbf{ONE} card from \textbf{Sprint Backlog} into \textbf{In Progress}.
+        \item If no, finish that card before starting a new one!
+    \end{itemize}
+    
+    \item \textbf{Definition of Done:}
+    Before moving a card to \textbf{Done}, verify:
+    \begin{itemize}
+        \item [ ] Code is written.
+        \item [ ] Code is pushed to GitHub.
+        \item [ ] (If using AI) AI Verification Log is updated.
+        \item [ ] It works locally.
+    \end{itemize}
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   RESOURCES
+%----------------------------------------------------------------------------------------
+
+\section*{Further Resources}
+
+\begin{itemize}
+    \item \textbf{Writing Good User Stories:} \href{https://www.atlassian.com/agile/project-management/user-stories}{https://www.atlassian.com/agile/project-management/user-stories}
+    \item \textbf{Trello GitHub Power-Up Guide:} \href{https://support.atlassian.com/trello/docs/using-the-github-power-up/}{https://support.atlassian.com/trello/docs/using-the-github-power-up/}
+    % \item \textbf{Personal Kanban:} \href{https://personalkanban.com/}{https://personalkanban.com/} - A method for managing individual workload.
+    \item \textbf{Assessment Brief:} Check Blackboard Assessment 1 folder for details regarding the Robot Management System.
+\end{itemize}
+
+\end{document}
