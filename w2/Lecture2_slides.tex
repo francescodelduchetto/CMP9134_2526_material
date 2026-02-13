@@ -11,7 +11,7 @@
         \usebeamerfont{section in head/foot}
         \hspace{0.5cm}
         \ifnum\insertframenumber<30
-            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 123456}}
+            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 927142}}
         \fi
         \hspace{0.5cm}
     \end{beamercolorbox}
@@ -40,7 +40,13 @@
 \usepackage{tgheros}
 \usepackage{hyperref}
 \usepackage{tikz}
-\usetikzlibrary{shapes, arrows, positioning, shadows, calc, decorations.pathreplacing}
+\usetikzlibrary{shapes, arrows, positioning, shadows, calc, decorations.pathreplacing, arrows.meta}
+
+% % \usepackage{tikz}÷
+% \usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, decorations.pathreplacing}
+\usepackage{sfmath} % Sans serif math font
+\renewcommand{\familydefault}{\sfdefault} % Sans serif text
+
 
 \renewcommand*\familydefault{\sfdefault}
 
@@ -60,7 +66,7 @@
 \subtitle{CMP9134: Software Engineering}
 \author[Francesco Del Duchetto]{Dr Francesco Del Duchetto\\Lecturer in Robotics and Autonomous Systems}
 \institute[University of Lincoln]{University of Lincoln}
-\date{20 February 2026}
+\date{13 February 2026}
 
 %------------------------------------------------------------
 \begin{document}
@@ -206,25 +212,50 @@
 \begin{frame}[fragile]
     \frametitle{Iterative vs Incremental}
     \centering
-    \begin{tikzpicture}[scale=0.6, transform shape]
-        % Axis
-        \draw[->, thick] (-5,0) -- (5,0) node[right] {\textbf{Incremental}};
-        \draw[->, thick] (0,-4) -- (0,4) node[above] {\textbf{Iterative}};
+\definecolor{myblue}{RGB}{100, 110, 235}
+\definecolor{myfill}{RGB}{100, 110, 235}
+\begin{tikzpicture}[scale=0.6, transform shape]
+    % --- Axes ---
+    \draw[->, thick] (-5,0) -- (5,0) node[right] {\textbf{Incremental}};
+    \draw[->, thick] (0,-4) -- (0,4) node[above] {\textbf{Iterative}};
 
-        % Quadrants
-        \node[align=center] at (-3, 3) {\textbf{Spiral}\\(Design Thinking)\\Refining the idea};
-        \node[align=center] at (3, 3) {\textbf{Agile}\\(Scrum/XP)\\Refining \& Building pieces};
-        
-        \node[align=center] at (-3, -3) {\textbf{Waterfall}\\Single pass\\Sequential};
-        \node[align=center] at (3, -3) {\textbf{Staged Delivery}\\(Prince2)\\Building block by block};
+    % --- Top Left: Spiral (Design Thinking) ---
+    \node[align=center] at (-3, 3) {\textbf{Spiral}\\(Design Thinking)\\Refining the idea};
+    
+    % The Spiral Fix: Using a mathematical plot instead of a circle
+    \draw[red, thick, ->] 
+        plot[domain=0:18.5, variable=\t, samples=200, smooth] 
+        ({-3 + 0.05*\t*cos(\t r)}, {1.3 + 0.05*\t*sin(\t r)});
 
-        % Graphics (Simulated)
-        \draw[red, thick, ->] (-3, 1.5) circle (0.5);
-        \foreach \x in {2, 2.5, 3} \draw[blue, thick] (\x, 1.5) rectangle (\x+0.3, 1.8);
-        \draw[black, thick, ->] (-4, -2) -- (-3, -2.5) -- (-2, -3);
-        \foreach \x in {2, 2.5, 3} \draw[black, thick] (\x, -2) rectangle (\x+0.3, -1.7);
-        
-    \end{tikzpicture}
+    % --- Top Right: Agile (Scrum/XP) ---
+    \node[align=center] at (3, 3) {\textbf{Agile}\\(Scrum/XP)\\Refining \& Building pieces};
+    
+    % Agile Boxes with Loops
+    \foreach \x in {1.8, 2.5, 3.2} {
+        % The 2D Box
+        \draw[blue, thick] (\x, 1.2) rectangle ++(0.4, 0.4);
+        % The Loop on top
+        \draw[blue, thin, ->] (\x+0.05, 1.8) .. controls (\x+0.05, 2.3) and (\x+0.35, 2.3) .. (\x+0.35, 1.8);
+    }
+
+    % --- Bottom Left: Waterfall ---
+    \node[align=center] at (-5, -2.5) {\textbf{Waterfall}\\Single pass\\Sequential};
+    % Simple 2D cascading steps
+    \foreach \i in {0, 1, 2} {
+        \draw[thick] (-4 + \i*0.6, -1.2 - \i*0.5) rectangle ++(0.6, -0.4);
+        % Small arrow between steps
+        \ifnum\i<2
+            \draw[->, thin] (-3.4 + \i*0.6, -1.4 - \i*0.5) -- (-3.4 + \i*0.6, -1.7 - \i*0.5);
+        \fi
+    }
+
+    % --- Bottom Right: Staged Delivery ---
+    \node[align=center] at (3, -3) {\textbf{Staged Delivery}\\Building block by block};
+    % Simple 2D blocks
+    \foreach \x in {1.8, 2.5, 3.2} 
+        \draw[black, thick] (\x, -1.8) rectangle ++(0.4, 0.4);
+
+\end{tikzpicture}
     
     \vspace{0.5cm}
     \small
@@ -286,6 +317,28 @@
     \end{columns}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Agile Success}
+    % \begin{columns}
+        % \column{0.5\textwidth}
+        % \begin{itemize}
+        %     \item User Stories
+        %     \item Spikes \& Refactoring
+        %     \item Pair Programming
+        %     \item Test-Driven Development (TDD)
+        %     \item Continuous Integration
+        %     \item Collective Code Ownership
+        % \end{itemize}
+
+        % \column{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{agilestat.png}
+
+        Agile projects are roughly 2X more likely to succeed than Waterfall projects, and Waterfall projects are 3X more likely to fail completely.
+    % \end{columns}
+\end{frame}
+
+
 %------------------------------------------------------------
 \section{Extreme Programming (XP)}
 %------------------------------------------------------------
@@ -332,6 +385,27 @@
         \item \textbf{Coach:} Guides the team in XP methodology, facilitates meetings, and helps resolve conflicts.
     \end{itemize}
 \end{frame}
+
+% add new slide with image here w2/What-is-Extreme-Programming-(XP).webp
+\begin{frame}
+    \frametitle{XP Core Practices}
+    % \begin{columns}
+        % \column{0.5\textwidth}
+        % \begin{itemize}
+        %     \item User Stories
+        %     \item Spikes \& Refactoring
+        %     \item Pair Programming
+        %     \item Test-Driven Development (TDD)
+        %     \item Continuous Integration
+        %     \item Collective Code Ownership
+        % \end{itemize}
+
+        % \column{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{Screenshot 2026-02-13 at 08.25.42.png}
+    % \end{columns}
+\end{frame}
+
 
 \begin{frame}
     \frametitle{XP Core Practices: User Stories}
@@ -392,6 +466,22 @@
             \draw[<->, dashed, thick] (p2) -- (screen);
         \end{tikzpicture}
     \end{columns}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{XP Core Practices: Test-Driven Development (TDD)}
+    \begin{block}{Definition}
+        A software development process where you write tests before writing the code that implements the functionality.
+    \end{block}
+    
+    \vspace{0.5cm}
+    \textbf{The TDD Cycle:}
+    \begin{center}
+        \textbf{Red} $\rightarrow$ Write a failing test.\\
+        \textbf{Green} $\rightarrow$ Write just enough code to pass the test.\\
+        \textbf{Refactor} $\rightarrow$ Clean up the code while keeping tests green.
+    \end{center}
 \end{frame}
 
 %------------------------------------------------------------
