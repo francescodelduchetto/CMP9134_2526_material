@@ -1,0 +1,180 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% Geometry setup
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{CMP9134: Software Engineering}}
+\rhead{\textbf{Week 3}}
+\lfoot{University of Lincoln}
+\rfoot{Page \thepage}
+
+% Color definitions
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%   TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{center}
+    \LARGE \textbf{Lab Sheet 3: Requirements \& LEPSI Constraints} \\
+    \vspace{0.5cm}
+    \large \textbf{Objectives}
+\end{center}
+
+\noindent By completing today's workshop, you will:
+\begin{itemize}
+    \item Perform a \textbf{Data Privacy Audit} to satisfy GDPR constraints.
+    \item Define and enforce a \textbf{Definition of Done (DoD)} using GitHub Pull Request Templates.
+    \item Run the \textbf{Virtual Robot Simulation container} and analyze its live API documentation to define interface requirements.
+    \item Critically analyze your system for \textbf{Dual Use} ethical implications.
+\end{itemize}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Introduction: Requirements in Practice}
+In this week's lecture, we established that Legal, Ethical, Professional, and Social Issues (LEPSI) are \textbf{Non-Functional Requirements (NFRs)} that shape your software architecture. Today, you will translate those theoretical constraints into tangible project artifacts for your Assessment 1 (Robot Management System).
+
+%----------------------------------------------------------------------------------------
+%   TASK 1
+%----------------------------------------------------------------------------------------
+
+\section*{Task 1: GDPR \& Data Privacy Audit}
+
+\textbf{Goal:} Identify Personally Identifiable Information (PII) and document your data handling policy.
+
+\textbf{The Concept:} The General Data Protection Regulation (GDPR) mandates "Privacy by Design." Two key principles are:
+\begin{itemize}
+    \item \textbf{Data Minimisation:} Only collect the data absolutely necessary to fulfill the system's purpose.
+    \item \textbf{Storage Limitation:} Do not keep data longer than needed.
+\end{itemize}
+Your Assessment 1 brief requires "Mission Logging (Audit Trail)" which logs every command sent to the robot, including the user who sent it. This means you are processing PII.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item In your GitHub repository, create a new file named \texttt{PRIVACY\_POLICY.md} (or add a page to your GitHub Wiki).
+    \item Write a short (2-3 paragraph) policy that answers the following:
+    \begin{itemize}
+        \item \textbf{What PII is collected?} (e.g., Usernames, IP addresses, Timestamps of actions).
+        \item \textbf{Why is it collected?} (e.g., To satisfy the safety audit requirement of the Ground Control Station).
+        \item \textbf{How is it secured?} (e.g., Access to the audit log is restricted via Role-Based Access Control to 'Auditor' roles only).
+    \end{itemize}
+    \item Commit and push this file. This serves as evidence of Professional and Legal consideration for your final report.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 2
+%----------------------------------------------------------------------------------------
+
+\section*{Task 2: Enforcing the Definition of Done (DoD)}
+
+\textbf{Goal:} Automate your project checklist using a GitHub Pull Request Template.
+
+\textbf{The Concept:} A Definition of Done is useless if you forget to check it. In professional software engineering, teams use Pull Request (PR) templates to force developers to tick off the DoD checklist before their code can be merged into the \texttt{main} branch.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item In the root of your local repository, create a hidden folder named \texttt{.github}
+    \item Inside that folder, create a file named \texttt{pull\_request\_template.md}.
+    \item Copy and paste the following markdown into the file:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{markdown}
+## Description
+Briefly describe the changes in this PR. Closes #<Issue_Number>
+
+## Definition of Done (DoD) Checklist
+Please confirm that this PR meets our quality standards:
+- [ ] Code compiles and runs locally without errors.
+- [ ] Unit tests for new logic have been written and pass.
+- [ ] UI changes have been checked for WCAG Accessibility.
+- [ ] No hardcoded passwords or API keys are in the code.
+- [ ] AI Verification Log (in Appendix A) has been updated.
+
+## Testing Instructions
+How can the reviewer test this feature? (e.g., "Run docker-compose up, 
+log in as Commander, and click Move").
+    \end{minted}
+    \item Commit and push this file.
+    \item Now, create a new branch, make a tiny change (e.g., update the README), and open a Pull Request on GitHub. You should automatically see your DoD checklist appear in the description box!
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 3
+%----------------------------------------------------------------------------------------
+
+\section*{Task 3: Analyzing Live API Interface Requirements}
+
+\textbf{Goal:} Run the Virtual Robot Docker container and interact with its live API documentation to define the exact data contract between your frontend dashboard and the robot.
+
+\textbf{The Concept:} An API specification serves as a strict interface requirement. You have been provided with a Docker container that simulates the robot and hosts its own live interactive documentation (Swagger UI). Before building your dashboard, you must run this container and analyze the contract to understand what data formats are strictly required.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Ensure Docker Desktop is running on your machine.
+    \item Open a terminal (Terminal, PowerShell, or Git Bash) and run the following command to start the simulation:
+    \begin{minted}[bgcolor=lightgray, fontsize=\footnotesize, ]{bash}
+docker run -p 5000:5000 ghcr.io/francescodelduchetto/cmp9134_2526_robotsim:latest
+    \end{minted}
+    \item Once the container is running, open a web browser and navigate to the live API documentation at: \href{http://localhost:5000/docs}{http://localhost:5000/docs}.
+    \item Analyze the visualized documentation. You should identify specific endpoints such as \texttt{/api/status} and \texttt{/api/move}.
+    \item Expand the \texttt{POST /api/move} endpoint and inspect the required schema. Try sending a request through the web interface to see how the system responds.
+    \item \textbf{Update your Trello Requirements:} Go to your Trello board and find the User Story related to navigating the robot. Add the exact interface requirements you discovered as \textbf{Acceptance Criteria}, for example:
+    \begin{itemize}
+        \item \textit{"The UI must send a POST request to \texttt{/api/move} with a JSON payload containing 'x' and 'y'."}
+        \item \textit{"The UI must ensure X and Y inputs match the expected data types specified in the API documentation to prevent 422 Validation Errors."}
+    \end{itemize}
+    Go back to the lecture slides and review all the different types of (non-functional) requirements you can add as Acceptance Criteria to make your User Stories more robust and testable.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 4
+%----------------------------------------------------------------------------------------
+
+\section*{Task 4: Dual Use Implications}
+
+\textbf{Goal:} Begin drafting the "Social, Ethical, and Entrepreneurial Implications" section of your final report.
+
+\textbf{The Concept:} "Dual Use" technology refers to software or hardware designed for civilian/peaceful purposes that could be misused for malicious or military purposes. You are building a Ground Control Station for an autonomous unit.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Open a document and write a 150-200 word reflection answering the following:
+    \begin{itemize}
+        \item What are the worst-case scenarios if an unauthorized actor gains "Commander" access to your Ground Control Station?
+        \item How does your system design (RBAC, Audit Logging) attempt to mitigate this ethical risk?
+    \end{itemize}
+    \item Save this text. You will use it directly in Section 5 of your Assessment 1 Report.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   RESOURCES
+%----------------------------------------------------------------------------------------
+
+\section*{Further Resources}
+
+\begin{itemize}
+    \item \textbf{Docker Desktop Installation (Not needed for PCs in INB labs):} \\\href{https://docs.docker.com/desktop/}{https://docs.docker.com/desktop/}
+    \item \textbf{Acceptance Criteria: Examples and Best Practices:} \\\href{https://www.atlassian.com/work-management/project-management/acceptance-criteria}{https://www.atlassian.com/work-management/project-management/acceptance-criteria}
+    \item \textbf{ICO Guide to GDPR (UK):} \\\href{https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/}{https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/}
+    \item \textbf{GitHub Docs: Creating a Pull Request Template:} \\\href{https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository}{https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository}
+    \item \textbf{W3C Web Accessibility Guidelines (WCAG) Overview:} \\\href{https://www.w3.org/WAI/standards-guidelines/wcag/}{https://www.w3.org/WAI/standards-guidelines/wcag/}
+\end{itemize}
+
+\end{document}
