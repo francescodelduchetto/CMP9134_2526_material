@@ -11,7 +11,7 @@
         \usebeamerfont{section in head/foot}
         \hspace{0.5cm}
         \ifnum\insertframenumber<30
-            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 123456}}
+            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 874231}}
         \fi
         \hspace{0.5cm}
     \end{beamercolorbox}
@@ -87,7 +87,44 @@
         \item \textbf{Apply} Agile methodologies to capture LEPSI constraints using User Stories and a robust "Definition of Done" (DoD).
     \end{enumerate}
 \end{frame}
+%------------------------------------------------------------
+% \section{Recap: Week 2}
+%------------------------------------------------------------
 
+\begin{frame}
+    \frametitle{Recap: Agile Methodologies}
+    Last week, we explored the shift from traditional, linear development (Waterfall) to \textbf{iterative and incremental} Agile processes.
+    
+    
+
+% [Image of Agile software development cycle]
+
+    
+    \begin{block}{The Agile Mindset}
+        \begin{itemize}
+            \item \textbf{Individuals and interactions} over processes and tools.
+            \item \textbf{Working software} over comprehensive documentation.
+            \item \textbf{Customer collaboration} over contract negotiation.
+            \item \textbf{Responding to change} over following a plan.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Recap: Scrum \& Solo Agile}
+    We also looked at \textbf{Scrum}, a specific Agile framework, and how to adapt it for your individual Assessment 1 project.
+    
+    
+
+% [Image of Scrum÷ framework process]
+
+    
+    \begin{itemize}
+        \item \textbf{Sprints:} Working in short, focused iterations (e.g., 1-2 weeks).
+        \item \textbf{Artifacts:} Maintaining a \textbf{Product Backlog} (everything needed) and a \textbf{Sprint Backlog} (what you are doing now).
+        \item \textbf{Solo Agile ("Personal Scrum"):} You act as the \textit{Product Owner} (prioritising tasks), the \textit{Scrum Master} (managing your Trello board and removing distractions), and the \textit{Developer} (writing the code).
+    \end{itemize}
+\end{frame}
 %------------------------------------------------------------
 \section{What is Software Requirements Engineering?}
 %------------------------------------------------------------
@@ -202,14 +239,13 @@
     \frametitle{Regulatory Compliance as a Requirement}
     Your system architecture is dictated by law.
     \begin{itemize}
-        \item \textbf{GDPR (EU,UK) / CCPA (California):} Governs the protection of personal data.
-        \item \textbf{Design Constraints imposed:}
+        \item \textbf{General Data Protection Regulation (GDPR) (EU,UK) / California Consumer Privacy Act (CCPA) (California):} Governs the protection of personal data. Design constraints imposed:
         \begin{itemize}
             \item You must obtain consent before collecting data.
             \item You must implement the "Right to be Forgotten" (deletion workflows).
             \item \textit{Architecture impact:} User data cannot be permanently baked into immutable logs.
         \end{itemize}
-        \item \textbf{HIPAA (US Health) / PCI DSS (Payments):} Requires strict encryption, access controls (RBAC), and vulnerability scanning.
+        \item \textbf{Health Insurance Portability and acccountability Act HIPAA (US Health) / Payment Card Industry Data Security Standard PCI DSS (Payments):} Requires strict encryption, access controls (RBAC), and vulnerability scanning.
     \end{itemize}
 \end{frame}
 
@@ -228,7 +264,7 @@
 
 \begin{frame}[fragile]
     \frametitle{Accessibility as a Requirement (WCAG)}
-    Accessibility ensures software is usable by all people, including those with disabilities. The W3C defines \textbf{POUR} principles:
+    \textbf{WCAG: Web Content Accessibility Guidelines.}\\Accessibility ensures software is usable by all people, including those with disabilities. The W3C defines \textbf{POUR} principles:
     
     \vspace{0.3cm}
     \begin{center}
@@ -244,6 +280,8 @@
         \draw[thick, gray, dashed] ($(P.north west)+(-0.2,0.2)$) rectangle ($(R.south east)+(0.2,-0.2)$);
     \end{tikzpicture}
     \end{center}
+
+    \tiny \url{https://www.w3.org/TR/UNDERSTANDING-WCAG20/intro.html} by World Wide Web Consortium (W3C)
 \end{frame}
 
 \begin{frame}
@@ -256,6 +294,14 @@
     \end{itemize}
 \end{frame}
 
+
+
+\begin{frame}
+    \frametitle{Example: Accidental Dual Use}
+    \centering
+        \includegraphics[width=0.8\textwidth]{imgs/Screenshot 2026-02-20 at 08.55.26.png}
+
+\end{frame}
 
 %------------------------------------------------------------
 \section{Stages of the Requirements Process}
@@ -310,6 +356,9 @@
         \item \textbf{Requirement Prioritization} techniques (MoSCoW, Kano).
         \item \textbf{Feasibility Analysis} to assess technical and economic viability.
     \end{itemize}
+
+    \vspace{0.5cm}
+    \footnotesize \url{https://www.atlassian.com/agile/product-management/prioritization-framework} for more details on prioritization frameworks.
 \end{frame}
 
 \begin{frame}
@@ -336,6 +385,10 @@
         \item \textbf{Test Case Generation} to verify requirements can be tested.
         \item \textbf{Traceability Matrices} to ensure all requirements are covered by tests.
     \end{itemize}
+
+    \vspace{0.5cm}
+    \footnotesize \url{https://www.atlassian.com/blog/agile/agile-design-prototypes} for more on prototyping in Agile.
+    \url{https://en.wikipedia.org/wiki/Traceability_matrix} for more on traceability matrices.
 \end{frame}
 
 \begin{frame}
@@ -443,7 +496,7 @@
             \item The UI must have two numeric input fields (X and Y).
             \item The system must reject negative coordinates (Error Handling).
             \item A POST request must be sent to the API's \texttt{/move} endpoint.
-            \item \textbf{LEPSI Constraint:} The "Move" button must be accessible via Keyboard (WCAG).
+            \item The "Move" button must be accessible via Keyboard (WCAG).
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -481,6 +534,14 @@
 %         \item \textbf{Stretch Task (Distinction):} Write a paragraph outlining the "Dual Use" implications of your Ground Control Station.
 %     \end{itemize}
 % \end{frame}
+\begin{frame}
+    \frametitle{Next Steps}
+    \begin{itemize}
+        \item \textbf{This Week's Workshop:} Requirements and LEPSI Constraints.
+        % \item \textbf{Reading:} Sommerville, \textit{Software Engineering 9th Edition}, Chapter 1.
+        \item \textbf{Next Week:} Software Modelling \& OOP.
+    \end{itemize}
+\end{frame}
 
 \begin{frame}
     \frametitle{Q \& A}
