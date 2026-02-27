@@ -221,7 +221,7 @@
     \begin{columns}
         \column{0.5\textwidth}
         \begin{itemize}
-            \item \textbf{Actors:} Roles played by human users or external hardware (stick figures).
+            \item \textbf{Actors:} Roles played by human users or external hardware/systems (stick figures).
             \item \textbf{Use Cases:} The goal or action (ovals).
             \item \textbf{System Boundary:} The scope of your software (box).
         \end{itemize}
@@ -285,8 +285,8 @@
         % 2. Use Cases
         \node[usecase] (browse) at (2.75, 1) {Browse Menu};
         \node[usecase] (order)  at (2.75, -1) {Place Order};
-        \node[usecase] (coupon) at (2.75, -3) {Apply Coupon};
-        \node[usecase] (pay)    at (2.75, -5) {Process Payment};
+        \node[usecase] (coupon) at (1, -3) {Apply Coupon};
+        \node[usecase] (pay)    at (4, -4.5) {Process Payment};
         \node[usecase] (status) at (2.75, -6.5) {Update Status};
 
         % 3. Actors
@@ -316,16 +316,26 @@
 
 \begin{frame}
     \frametitle{2. Sequence Diagrams}
-    Show the step-by-step interactions between actors and system components over time.
-    
-    
-    
+
     \begin{itemize}
-        \item \textbf{Lifelines:} Vertical dashed lines representing the lifespan of an object.
-        \item \textbf{Messages:} Horizontal arrows showing calls, returns, or data transfers.
-        \item \textbf{Activation Boxes:} Rectangles on the lifeline showing when an object is actively processing.
-        \item \textbf{Time:} Reads from top to bottom.
+        \item Sequence diagrams in the UML are primarily used to
+model the interactions between the actors and the objects in a system and the interactions between them.
+        \item As the name implies, a sequence diagram shows the
+\textbf{sequence of interactions during a particular use case} or
+use case instance.
+        \item The objects and actors involved are listed along the top
+of the diagram, with a dotted line drawn vertically from
+these.
     \end{itemize}
+    
+    
+    
+    % \begin{itemize}
+    %     \item \textbf{Lifelines:} Vertical dashed lines representing the lifespan of an object.
+    %     \item \textbf{Messages:} Horizontal arrows showing calls, returns, or data transfers.
+    %     \item \textbf{Activation Boxes:} Rectangles on the lifeline showing when an object is actively processing.
+    %     \item \textbf{Time:} Reads from top to bottom.
+    % \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -366,7 +376,7 @@
         % Activity Boxes
         \node[activity, minimum height=6cm] (act_rec) at (0,-4.5) {};
         \node[activity, minimum height=5.5cm] (act_p) at (3.5,-4.75) {};
-        \node[activity, minimum height=4.5cm] (act_d) at (7.5,-5.25) {};
+        \node[activity, minimum height=5cm] (act_d) at (7.5,-5.0) {};
         \node[activity, minimum height=1.2cm] (act_as) at (11.5,-4) {};
 
         % Messages
@@ -376,9 +386,9 @@
         \draw[reply] (act_as.west |- 0,-4.3) -- (act_d.east |- 0,-4.3) node[midway, above, font=\small] {Authorization};
 
         % Alt Box
-        \draw[draw=black, thick] (-0.5, -5) rectangle (9, -7.2);
-        \node[draw=black, fill=white, thick, anchor=north west] at (-0.5, -5) {\textbf{Alt}};
-        \draw[dashed, thick] (-0.5, -6.1) -- (9, -6.1);
+        \draw[draw=black, thick] (-1.3, -5) rectangle (12, -7.2);
+        \node[draw=black, fill=white, thick, anchor=north west] at (-1.3, -5) {\textbf{Alt}};
+        \draw[dashed, thick] (-1.3, -6.1) -- (12, -6.1);
 
         % Alt Conditions & Returns
         \node[anchor=west, font=\small] at (-0.4, -5.5) {[Authorization OK]};
@@ -391,7 +401,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Sequence Diagram Components}
+    \frametitle{2. Sequence Diagram Components}
     \small
     How do we read the Medical Receptionist model? You read the sequence of interactions from top to bottom.
     
@@ -410,19 +420,39 @@
 % CLASS DIAGRAMS
 %------------------------------------------------------------
 
+\begin{frame}
+    \frametitle{3. Class Diagrams \& Object-Oriented Programming}
+    Class diagrams are the backbone of Object-Oriented Programming (OOP). They show the object classes in the system and their associations.
+    
+    \vspace{0.3cm}
+    \textbf{Mapping OOP to UML:}
+    \begin{itemize}
+        \item \textbf{Encapsulation:} A class groups Data (Attributes) and Behavior (Methods/Operations) together.
+        \item \textbf{Inheritance:} "Is-a" relationship (e.g., a \texttt{Drone} is a type of \texttt{Robot}). Shown with a hollow arrow.
+        \item \textbf{Association:} "Has-a" or "Uses-a" relationship (e.g., a \texttt{Commander} controls a \texttt{Robot}).
+    \end{itemize}
+\end{frame}
+
+
 \begin{frame}[fragile]
     \frametitle{3. Class Diagrams: Attributes \& Operations}
     Class diagrams describe the types of objects within the system and their relationships.
     
     \vspace{0.2cm}
     \begin{columns}
-        \column{0.45\textwidth}
+        \column{0.60\textwidth}
         \begin{itemize}
             \item Rectangles are divided into three parts: class name, attributes, and operations (methods).
             \item \textbf{Attributes} characterize the class and define the state of objects within the class.
+            \item \textbf{Visibility Modifiers:}
+                \begin{itemize}
+                \item \texttt{+} Public (Accessible anywhere)
+                \item \texttt{-} Private (Encapsulated/Hidden)
+                \item \texttt{\#} Protected (Accessible to subclasses)
+                \end{itemize}
         \end{itemize}
         
-        \column{0.55\textwidth}
+        \column{0.40\textwidth}
         \centering
         \begin{tikzpicture}[
             classbox/.style={
@@ -444,6 +474,12 @@
                 + getName(): String\\
                 + getBirthDate(): Date
             };
+        %     \node[align=left, font=\footnotesize, right=1cm of robot] {
+        %     \textbf{Visibility Modifiers:}\\
+        %     \texttt{+} Public (Accessible anywhere)\\
+        %     \texttt{-} Private (Encapsulated/Hidden)\\
+        %     \texttt{\#} Protected (Accessible to subclasses)
+        % };
         \end{tikzpicture}
     \end{columns}
 \end{frame}
@@ -510,8 +546,8 @@
         \draw[comp] (team.west) -- (company.east);
         \draw[agg] (emp.west) -- (team.east);
         
-        \node[align=center, font=\scriptsize, below=0.3cm of company.east] {Composition:\\Team cannot exist\\without company};
-        \node[align=center, font=\scriptsize, below=0.3cm of team.east] {Aggregation:\\Throw away team,\\employee still exists};
+        \node[align=center, font=\scriptsize, below right=0.3cm and -0.4cm of company.east] {Composition:\\Team cannot exist\\without company};
+        \node[align=center, font=\scriptsize, below right=0.3cm and -0.4cm of team.east] {Aggregation:\\Throw away team,\\employee still exists};
     \end{tikzpicture}
 \end{frame}
 
@@ -523,7 +559,8 @@
     \end{itemize}
     
     \vspace{0.2cm}
-    \centering
+    \begin{center}
+        
     \begin{tikzpicture}[
         classbox/.style={rectangle split, rectangle split parts=2, draw=black, fill=white, thick, minimum width=2cm, align=center, font=\scriptsize},
         inherit/.style={-{Triangle[open, scale=1.5]}, thick}
@@ -550,11 +587,25 @@
         \draw[inherit] (0,-1.2) -- (shape.south);
         \draw[thick] (circle.north) -- (0,-1.2);
     \end{tikzpicture}
+    \end{center}
 \end{frame}
 
 %------------------------------------------------------------
 % ACTIVITY DIAGRAMS
 %------------------------------------------------------------
+
+\begin{frame}
+    \frametitle{4. Activity Diagrams}
+    Activity diagrams show the sequence of activities involved in a process or data processing. They are similar to flowcharts.
+    
+    
+    
+    \begin{itemize}
+        \item Good for mapping out complex business logic.
+        \item Uses \textbf{Decision Nodes} (diamonds) for branching logic (e.g., ``Is Battery $>$ 10\%?'').
+        \item Uses \textbf{Forks} and \textbf{Joins} (thick black bars) to show concurrent, parallel processing.
+    \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]
     \frametitle{4. Activity Diagrams: Basics}
@@ -629,66 +680,105 @@
     }%
 \end{frame}
 
+% \begin{frame}
+%     \frametitle{3. Class Diagrams \& Object-Oriented Programming}
+%     Class diagrams are the backbone of Object-Oriented Programming (OOP). They show the object classes in the system and their associations.
+    
+%     \vspace{0.3cm}
+%     \textbf{Mapping OOP to UML:}
+%     \begin{itemize}
+%         \item \textbf{Encapsulation:} A class groups Data (Attributes) and Behavior (Methods/Operations) together.
+%         \item \textbf{Inheritance:} "Is-a" relationship (e.g., a \texttt{Drone} is a type of \texttt{Robot}). Shown with a hollow arrow.
+%         \item \textbf{Association:} "Has-a" or "Uses-a" relationship (e.g., a \texttt{Commander} controls a \texttt{Robot}).
+%     \end{itemize}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%     \frametitle{Structure of a Class Node}
+%     \centering
+%     \begin{tikzpicture}[
+%         classbox/.style={
+%             rectangle split, rectangle split parts=3, 
+%             draw=black, fill=white, thick, 
+%             text width=4cm, align=left, 
+%             font=\small, drop shadow
+%         }
+%     ]
+%         \node[classbox, fill=cyan!10] (robot) {
+%             \nodepart{one} \centering \textbf{Robot (Class Name)}
+%             \nodepart{two} 
+%             - robotID: String\\
+%             - batteryLevel: int\\
+%             - positionX: int\\
+%             - positionY: int
+%             \nodepart{three}
+%             + getStatus(): JSON\\
+%             + move(x: int, y: int): bool\\
+%             - calculatePath(): void
+%         };
+        
+%         \node[align=left, font=\footnotesize, right=1cm of robot] {
+%             \textbf{Visibility Modifiers:}\\
+%             \texttt{+} Public (Accessible anywhere)\\
+%             \texttt{-} Private (Encapsulated/Hidden)\\
+%             \texttt{\#} Protected (Accessible to subclasses)
+%         };
+%     \end{tikzpicture}
+% \end{frame}
+
+% \begin{frame}
+%     \frametitle{4. Activity Diagrams}
+%     Activity diagrams show the sequence of activities involved in a process or data processing. They are similar to flowcharts.
+    
+    
+    
+%     \begin{itemize}
+%         \item Good for mapping out complex business logic.
+%         \item Uses \textbf{Decision Nodes} (diamonds) for branching logic (e.g., ``Is Battery $>$ 10\%?'').
+%         \item Uses \textbf{Forks} and \textbf{Joins} (thick black bars) to show concurrent, parallel processing.
+%     \end{itemize}
+% \end{frame}
+
+
+%------------------------------------------------------------
+% SUMMARY OF DIAGRAMS
+%------------------------------------------------------------
+
 \begin{frame}
-    \frametitle{3. Class Diagrams \& Object-Oriented Programming}
-    Class diagrams are the backbone of Object-Oriented Programming (OOP). They show the object classes in the system and their associations.
+    \frametitle{Summary of UML Diagrams}
+    We have explored four key UML diagrams, each providing a unique perspective on the software system:
     
     \vspace{0.3cm}
-    \textbf{Mapping OOP to UML:}
     \begin{itemize}
-        \item \textbf{Encapsulation:} A class groups Data (Attributes) and Behavior (Methods/Operations) together.
-        \item \textbf{Inheritance:} "Is-a" relationship (e.g., a \texttt{Drone} is a type of \texttt{Robot}). Shown with a hollow arrow.
-        \item \textbf{Association:} "Has-a" or "Uses-a" relationship (e.g., a \texttt{Commander} controls a \texttt{Robot}).
+        \item \textbf{Use Case Diagrams (External Perspective):} Model the context of the system and its interactions with outside actors.
+        \item \textbf{Sequence Diagrams (Interaction Perspective):} Detail how objects interact over time to complete a specific use case.
+        \item \textbf{Class Diagrams (Structural Perspective):} Define the static structure, showing classes, attributes, operations, and relationships.
+        \item \textbf{Activity Diagrams (Behavioral Perspective):} Illustrate the dynamic flow of control or data from activity to activity.
     \end{itemize}
-\end{frame}
-
-
-\begin{frame}[fragile]
-    \frametitle{Structure of a Class Node}
-    \centering
-    \begin{tikzpicture}[
-        classbox/.style={
-            rectangle split, rectangle split parts=3, 
-            draw=black, fill=white, thick, 
-            text width=4cm, align=left, 
-            font=\small, drop shadow
-        }
-    ]
-        \node[classbox, fill=cyan!10] (robot) {
-            \nodepart{one} \centering \textbf{Robot (Class Name)}
-            \nodepart{two} 
-            - robotID: String\\
-            - batteryLevel: int\\
-            - positionX: int\\
-            - positionY: int
-            \nodepart{three}
-            + getStatus(): JSON\\
-            + move(x: int, y: int): bool\\
-            - calculatePath(): void
-        };
-        
-        \node[align=left, font=\footnotesize, right=1cm of robot] {
-            \textbf{Visibility Modifiers:}\\
-            \texttt{+} Public (Accessible anywhere)\\
-            \texttt{-} Private (Encapsulated/Hidden)\\
-            \texttt{\#} Protected (Accessible to subclasses)
-        };
-    \end{tikzpicture}
+    
+    \vspace{0.3cm}
+    \textit{No single diagram captures everything. A complete system model requires multiple views!}
 \end{frame}
 
 \begin{frame}
-    \frametitle{4. Activity Diagrams}
-    Activity diagrams show the sequence of activities involved in a process or data processing. They are similar to flowcharts.
-    
-    
-    
-    \begin{itemize}
-        \item Good for mapping out complex business logic.
-        \item Uses \textbf{Decision Nodes} (diamonds) for branching logic (e.g., "Is Battery > 10%?").
-        \item Uses \textbf{Forks} and \textbf{Joins} (thick black bars) to show concurrent, parallel processing.
-    \end{itemize}
+    \frametitle{When to Use Which Diagram?}
+    \centering
+    \rowcolors{1}{cyan!10}{white}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{|p{3cm}|p{3cm}|p{5cm}|p{3.5cm}|}
+        \hline
+        \rowcolor{cyan!80}
+        \textbf{Diagram} & \textbf{Focus} & \textbf{When to Use?} & \textbf{Key Elements} \\
+        \hline
+        \textbf{Use Case} & External / Context & To capture system requirements and show what the system does for its users. & Actors, Use Cases, Boundaries \\
+        \textbf{Sequence} & Interaction / Time & To design the step-by-step message flow between objects for a specific scenario. & Lifelines, Messages, Activation Boxes \\
+        \textbf{Class} & Structural / OOP & To design the static architecture, database schema, or object-oriented code structure. & Classes, Attributes, Methods, Associations \\
+        \textbf{Activity} & Behavioral / Flow & To model complex business logic, parallel processes, or algorithms. & Activities, Decisions, Forks, Joins \\
+        \hline
+    \end{tabular}
+    }
 \end{frame}
-
 
 %------------------------------------------------------------
 \section{Interactive Hands-On: Let's Model!}
@@ -714,22 +804,27 @@
     \textbf{Task:} Identify the Actors and Use Cases.
     
     \vspace{0.5cm}
-    \textbf{Actors:}
-    \begin{itemize}
-        \item Customer (Human)
-        \item Chef (Human)
-        \item Payment Gateway (External System)
-    \end{itemize}
-    
-    \vspace{0.2cm}
-    \textbf{Use Cases (What are the bubbles?):}
-    \begin{itemize}
-        \item Browse Menu
-        \item Place Order
-        \item Process Payment
-        \item Update Order Status
-    \end{itemize}
+    \textit{Question to the room: Who are the actors and what are the use cases?}
 \end{frame}
+
+% \begin{frame}
+%     \frametitle{Step 1: The Use Case Diagram (Solution)}
+%     \textbf{Actors:}
+%     \begin{itemize}
+%         \item Customer (Human)
+%         \item Chef (Human)
+%         \item Payment Gateway (External System)
+%     \end{itemize}
+    
+%     \vspace{0.2cm}
+%     \textbf{Use Cases (What are the bubbles?):}
+%     \begin{itemize}
+%         \item Browse Menu
+%         \item Place Order
+%         \item Process Payment
+%         \item Update Order Status
+%     \end{itemize}
+% \end{frame}
 
 \begin{frame}
     \frametitle{Step 2: The Sequence Diagram}
@@ -737,56 +832,63 @@
     
     \vspace{0.3cm}
     \textit{Question to the room: What are the "Lifelines" (vertical lines) going to be across the top?}
-    
-    \vspace{0.3cm}
-    \textbf{Timeline Draft:}
-    \begin{enumerate}
-        \item \texttt{Customer} sends `submitOrder()` to \texttt{WebInterface}.
-        \item \texttt{WebInterface} sends `processCharge()` to \texttt{PaymentGateway}.
-        \item \texttt{PaymentGateway} returns `Payment Success`.
-        \item \texttt{WebInterface} sends `createTicket()` to \texttt{KitchenSystem}.
-    \end{enumerate}
 \end{frame}
+
+% \begin{frame}
+%     \frametitle{Step 2: The Sequence Diagram (Solution)}
+%     \textbf{Timeline Draft:}
+%     \begin{enumerate}
+%         \item \texttt{Customer} sends `submitOrder()` to \texttt{WebInterface}.
+%         \item \texttt{WebInterface} sends `processCharge()` to \texttt{PaymentGateway}.
+%         \item \texttt{PaymentGateway} returns `Payment Success`.
+%         \item \texttt{WebInterface} sends `createTicket()` to \texttt{KitchenSystem}.
+%     \end{enumerate}
+% \end{frame}
 
 \begin{frame}[fragile]
     \frametitle{Step 3: The Class Diagram (OOP)}
     \textbf{Task:} Identify the structural Classes, Attributes, and Methods.
     
     \vspace{0.3cm}
-    \centering
-    \begin{tikzpicture}[
-        classbox/.style={
-            rectangle split, rectangle split parts=3, 
-            draw=black, fill=white, thick, 
-            text width=3cm, align=left, 
-            font=\scriptsize
-        },
-        arrow/.style={->, >=stealth, thick}
-    ]
-        \node[classbox, fill=green!10] (order) {
-            \nodepart{one} \centering \textbf{Order}
-            \nodepart{two} 
-            - orderID: int\\
-            - status: String\\
-            - totalCost: float
-            \nodepart{three}
-            + calculateTotal()\\
-            + updateStatus()
-        };
-        
-        \node[classbox, fill=orange!10, right=1.5cm of order] (pizza) {
-            \nodepart{one} \centering \textbf{Pizza}
-            \nodepart{two} 
-            - size: String\\
-            - toppings: List
-            \nodepart{three}
-            + getPrice()
-        };
-        
-        \draw[thick] (order.east) -- (pizza.west) node[midway, above] {\scriptsize 1 .. *};
-        \node[below=0.1cm of pizza] {\textit{One Order 'contains' many Pizzas}};
-    \end{tikzpicture}
+    \textit{Question to the room: What are the main classes and their relationships?}
 \end{frame}
+
+% \begin{frame}[fragile]
+%     \frametitle{Step 3: The Class Diagram (OOP) (Solution)}
+%     \centering
+%     \begin{tikzpicture}[
+%         classbox/.style={
+%             rectangle split, rectangle split parts=3, 
+%             draw=black, fill=white, thick, 
+%             text width=3cm, align=left, 
+%             font=\scriptsize
+%         },
+%         arrow/.style={->, >=stealth, thick}
+%     ]
+%         \node[classbox, fill=green!10] (order) {
+%             \nodepart{one} \centering \textbf{Order}
+%             \nodepart{two} 
+%             - orderID: int\\
+%             - status: String\\
+%             - totalCost: float
+%             \nodepart{three}
+%             + calculateTotal()\\
+%             + updateStatus()
+%         };
+        
+%         \node[classbox, fill=orange!10, right=1.5cm of order] (pizza) {
+%             \nodepart{one} \centering \textbf{Pizza}
+%             \nodepart{two} 
+%             - size: String\\
+%             - toppings: List
+%             \nodepart{three}
+%             + getPrice()
+%         };
+        
+%         \draw[thick] (order.east) -- (pizza.west) node[midway, above] {\scriptsize 1 .. *};
+%         \node[below=0.1cm of pizza] {\textit{One Order 'contains' many Pizzas}};
+%     \end{tikzpicture}
+% \end{frame}
 
 \begin{frame}[fragile]
     \frametitle{Step 4: The Activity Diagram}
@@ -794,63 +896,65 @@
     
     \vspace{0.3cm}
     \textit{Question to the room: What happens if the payment fails?}
-    
-    \vspace{0.3cm}
-    \centering
-    \resizebox{0.9\textwidth}{!}{%
-    \begin{tikzpicture}[%
-        activity/.style={rectangle, draw=cyan!80, fill=cyan!10, thick, rounded corners, minimum width=2cm, minimum height=0.8cm, align=center, font=\scriptsize},
-        decision/.style={diamond, draw=cyan!80, thick, minimum size=0.6cm, inner sep=0pt, align=center},
-        start/.style={circle, fill=cyan!80, minimum size=0.4cm},
-        end/.style={circle, draw=cyan!80, thick, inner sep=0pt, minimum size=0.5cm, path picture={\fill[cyan!80] (path picture bounding box.center) circle (0.15cm);}},
-        arrow/.style={->, >=stealth, thick, gray!80!black}%
-    ]
-        \node[start] (start) at (0, 0) {};
-        \node[activity] (recv) at (2, 0) {Receive\\Order};
-        \node[activity] (pay) at (4.5, 0) {Process\\Payment};
-        \node[decision, fill=white] (dec) at (7, 0) {Payment\\OK?};
-        
-        \node[activity] (kitchen) at (9.5, 1) {Send to\\Kitchen};
-        \node[activity] (fail) at (9.5, -1) {Notify\\Customer};
-        
-        \node[end] (end1) at (12, 1) {};
-        \node[end] (end2) at (12, -1) {};
-
-        \draw[arrow] (start) -- (recv);
-        \draw[arrow] (recv) -- (pay);
-        \draw[arrow] (pay) -- (dec);
-        
-        \draw[arrow] (dec) |- node[near start, above left, font=\tiny] {[Yes]} (kitchen.west);
-        \draw[arrow] (dec) |- node[near start, below left, font=\tiny] {[No]} (fail.west);
-        
-        \draw[arrow] (kitchen) -- (end1);
-        \draw[arrow] (fail) -- (end2);
-    \end{tikzpicture}%
-    }%
 \end{frame}
+
+% \begin{frame}[fragile]
+%     \frametitle{Step 4: The Activity Diagram (Solution)}
+%     \centering
+%     \resizebox{0.9\textwidth}{!}{%
+%     \begin{tikzpicture}[%
+%         activity/.style={rectangle, draw=cyan!80, fill=cyan!10, thick, rounded corners, minimum width=2cm, minimum height=0.8cm, align=center, font=\scriptsize},
+%         decision/.style={diamond, draw=cyan!80, thick, minimum size=0.6cm, inner sep=0pt, align=center},
+%         start/.style={circle, fill=cyan!80, minimum size=0.4cm},
+%         end/.style={circle, draw=cyan!80, thick, inner sep=0pt, minimum size=0.5cm, path picture={\fill[cyan!80] (path picture bounding box.center) circle (0.15cm);}},
+%         arrow/.style={->, >=stealth, thick, gray!80!black}%
+%     ]
+%         \node[start] (start) at (0, 0) {};
+%         \node[activity] (recv) at (2, 0) {Receive\\Order};
+%         \node[activity] (pay) at (4.5, 0) {Process\\Payment};
+%         \node[decision, fill=white] (dec) at (7, 0) {Payment\\OK?};
+        
+%         \node[activity] (kitchen) at (9.5, 1) {Send to\\Kitchen};
+%         \node[activity] (fail) at (9.5, -1) {Notify\\Customer};
+        
+%         \node[end] (end1) at (12, 1) {};
+%         \node[end] (end2) at (12, -1) {};
+
+%         \draw[arrow] (start) -- (recv);
+%         \draw[arrow] (recv) -- (pay);
+%         \draw[arrow] (pay) -- (dec);
+        
+%         \draw[arrow] (dec) |- node[near start, above left, font=\tiny] {[Yes]} (kitchen.west);
+%         \draw[arrow] (dec) |- node[near start, below left, font=\tiny] {[No]} (fail.west);
+        
+%         \draw[arrow] (kitchen) -- (end1);
+%         \draw[arrow] (fail) -- (end2);
+%     \end{tikzpicture}%
+%     }%
+% \end{frame}
 
 %------------------------------------------------------------
 \section{Next Steps}
 %------------------------------------------------------------
 
-\begin{frame}
-    \frametitle{This Week's Lab: Modelling Your Robot}
-    In the workshop, you will apply these tools to your Assessment 1 project (The Robot Management System).
+% \begin{frame}
+%     \frametitle{This Week's Lab: Modelling Your Robot}
+%     In the workshop, you will apply these tools to your Assessment 1 project (The Robot Management System).
     
-    \begin{itemize}
-        \item \textbf{Task 1:} Draw a \textbf{Use Case Diagram} identifying your Commander, Viewer, and Auditor roles.
-        \item \textbf{Task 2:} Draw a \textbf{Class Diagram} for your Python/Node.js backend (e.g., mapping out the Robot API connection).
-        \item \textbf{Task 3:} Draw a \textbf{Sequence Diagram} showing exactly how a "Move" command travels from the UI, through the backend, to the Docker API.
-        \item \textbf{Tooling:} We recommend using \href{https://app.diagrams.net/}{Draw.io}, Lucidchart, or Mermaid.js.
-    \end{itemize}
-\end{frame}
+%     \begin{itemize}
+%         \item \textbf{Task 1:} Draw a \textbf{Use Case Diagram} identifying your Commander, Viewer, and Auditor roles.
+%         \item \textbf{Task 2:} Draw a \textbf{Class Diagram} for your Python/Node.js backend (e.g., mapping out the Robot API connection).
+%         \item \textbf{Task 3:} Draw a \textbf{Sequence Diagram} showing exactly how a "Move" command travels from the UI, through the backend, to the Docker API.
+%         \item \textbf{Tooling:} We recommend using \href{https://app.diagrams.net/}{Draw.io}, Lucidchart, or Mermaid.js.
+%     \end{itemize}
+% \end{frame}
 
 \begin{frame}
     \frametitle{Reading \& Resources}
     \begin{itemize}
         \item \textbf{Recommended Reading:} 
         Sommerville, \textit{Software Engineering 9th Edition}, Chapter 5 (System Modeling).
-        \item \textbf{Mermaid.js:} Highly recommended! It allows you to generate UML diagrams using markdown text directly in your GitHub README files.
+        % \item \textbf{Mermaid.js:} Highly recommended! It allows you to generate UML diagrams using markdown text directly in your GitHub README files.
     \end{itemize}
 \end{frame}
 

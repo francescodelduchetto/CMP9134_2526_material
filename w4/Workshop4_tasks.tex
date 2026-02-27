@@ -1,0 +1,226 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% Geometry setup
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{CMP9134: Software Engineering}}
+\rhead{\textbf{Week 4}}
+\lfoot{University of Lincoln}
+\rfoot{Page \thepage}
+
+% Color definitions
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%   TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{center}
+    \LARGE \textbf{Lab Sheet 4: Software System Modelling} \\
+    \vspace{0.5cm}
+    \large \textbf{Objectives}
+\end{center}
+
+\noindent By completing today's workshop, you will:
+\begin{itemize}
+    \item Practice translating system requirements into formal \textbf{UML Models}.
+    \item Map the actors and system boundaries using a \textbf{Use Case Diagram}.
+    \item Model the business logic and decisions using an \textbf{Activity Diagram}.
+    \item Define the OOP architecture and data structures using a \textbf{Class Diagram}.
+    \item Trace the chronological execution of API commands using a \textbf{Sequence Diagram}.
+\end{itemize}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Introduction: Modelling in Practice}
+The goal of this workshop is to practice abstracting your software system into visual models. Before you write the core logic for your Assessment 1 Robot Management System, you must fully map out its architecture.
+
+To draw these diagrams, we will use \textbf{Mermaid.js}. Mermaid allows you to write markdown-style text that automatically renders into diagrams directly on GitHub. 
+
+\textit{Note: While Mermaid is the tool, the focus of today is the \textbf{modelling process}. You must think critically about the relationships, logic, and data structures in your system.}
+
+To test your diagrams, use the \textbf{Mermaid Live Editor}: \href{https://mermaid.live}{https://mermaid.live} before pasting the code into your GitHub \texttt{README.md} or \texttt{docs/} folder.
+
+%----------------------------------------------------------------------------------------
+%   TASK 1
+%----------------------------------------------------------------------------------------
+
+\section*{Task 1: The Use Case Diagram}
+
+\textbf{Goal:} Define the external perspective. Who uses the Ground Control Station and what can they do?
+
+\textbf{The Concept:} We need to visually map the Role-Based Access Control (RBAC) requirements. You have multiple actors (Commanders, Viewers, Auditors) and multiple features. 
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Open the Mermaid Live Editor.
+    \item Draft a Use Case Diagram mapping your actors to their permissions. Here is some starter code to visualize the syntax:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{text}
+flowchart LR
+    %% Define Actors
+    C[Commander]
+    V[Viewer]
+
+    %% Define Use Cases
+    Move((Move Robot))
+    Status((View Status))
+
+    %% Connect Actors to Use Cases
+    C --> Move
+    C --> Status
+    V --> Status
+    \end{minted}
+    \item \textbf{Extend the Model:} Expand this diagram to include the \texttt{Auditor} actor and the \texttt{Reset Robot} use case. Ensure lines are only drawn to the actors who have permission for those specific actions.
+    \item Copy your final code into your GitHub repository inside a \texttt{```mermaid} code block, for example in a new file Markdown file in a \texttt{docs/} folder. See guidance in the resources section below for how to render Mermaid diagrams on GitHub.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 2
+%----------------------------------------------------------------------------------------
+
+\section*{Task 2: The Activity Diagram}
+
+\textbf{Goal:} Model the behavioral perspective and business logic of a single process.
+
+\textbf{The Concept:} An Activity Diagram shows the flow of control, including decision points (diamonds). Let's model the logic the backend must execute when a user attempts to send a move command.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Create a new diagram to map the "Move Robot" authorization process.
+    \item Use this base structure:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{text}
+stateDiagram-v2
+    [*] --> ReceiveRequest
+    ReceiveRequest --> CheckRole
+    
+    state check_role <<choice>>
+    CheckRole --> check_role
+    
+    check_role --> RejectCommand : Role is Viewer
+    check_role --> SendToRobot : Role is Commander
+    
+    RejectCommand --> [*]
+    SendToRobot --> [*]
+    \end{minted}
+    \item \textbf{Extend the Model:} In Assessment 1, the connection to the robot might drop. Add a new decision node after \texttt{SendToRobot} to check if the robot API is responsive. If yes, go to \texttt{LogSuccess}. If no, go to \texttt{LogError}.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 3
+%----------------------------------------------------------------------------------------
+
+\section*{Task 3: The Class Diagram (OOP Data Models)}
+
+\textbf{Goal:} Model the structural perspective of your backend data.
+
+\textbf{The Concept:} You need to design the Object-Oriented architecture for your backend. This involves defining Classes, Attributes (data), and Operations (methods).
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Draft a Class Diagram mapping out the core entities of your application.
+    \item Use the `classDiagram` syntax:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{text}
+classDiagram
+    class User {
+        -String username
+        -String passwordHash
+        -String role
+        +login() bool
+        +getRole() String
+    }
+
+    class RobotController {
+        -String apiEndpoint
+        +getStatus() JSON
+        +moveRobot(int x, int y) bool
+    }
+    
+    User "1" --> "1" RobotController : Uses
+    \end{minted}
+    \item \textbf{Extend the Model:} Add a \texttt{MissionLog} class to represent the audit trail requirement. What attributes should it store? Add a composition/aggregation line showing how the \texttt{RobotController} interacts with the \texttt{MissionLog}.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 4
+%----------------------------------------------------------------------------------------
+
+\section*{Task 4: The Sequence Diagram}
+
+\textbf{Goal:} Trace the interaction perspective over time.
+
+\textbf{The Concept:} Sequence diagrams show how objects communicate chronologically. We will trace a command from the human user all the way to the Docker simulation.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Draft the timeline of a "Move" command.
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{text}
+sequenceDiagram
+    actor C as Commander
+    participant UI as Web Dashboard
+    participant API as Python/Node Backend
+    participant Sim as Virtual Robot (Docker)
+
+    C->>UI: Enter X, Y and click 'Move'
+    UI->>API: POST /api/command {x: 5, y: 10}
+    
+    activate API
+    API->>Sim: POST /api/move {x: 5, y: 10}
+    Sim-->>API: 200 OK
+    API-->>UI: 200 OK
+    deactivate API
+    \end{minted}
+    \item \textbf{Extend the Model:} Add the missing steps! Before the API sends the command to the \texttt{Sim}, it should verify the user's token. After the \texttt{Sim} responds, the API should write to a \texttt{Database} participant to log the mission. Update the diagram to reflect these critical architectural steps.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 5
+%----------------------------------------------------------------------------------------
+
+\section*{Task 5 (Distinction Stretch): Component Diagram}
+
+\textbf{Goal:} Model the high-level physical architecture of your system.
+
+\textbf{The Concept:} A Component Diagram requires us to look at the system macroscopically. How do the frontend, backend, database, and virtual robot connect over the network? To learn more about Component Diagrams, you can refer to the \href{https://www.ibm.com/docs/en/rational-soft-arch/9.7.0?topic=diagrams-component}{IBM UML Documentation} or the \href{https://www.lucidchart.com/pages/uml-component-diagram}{Lucidchart Component Diagram Guide}.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Use Mermaid to create a high-level Component/Architecture diagram showing your deployment strategy.
+    \item Group components using subgraphs (e.g., wrap your Web UI and Backend API inside a `subgraph Ground Control Station`, and place the `Virtual Robot Container` outside of it).
+    \item Add this final architectural blueprint to the root `README.md` of your Assessment repository.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   RESOURCES
+%----------------------------------------------------------------------------------------
+
+\section*{Further Resources}
+
+\begin{itemize}
+    \item \textbf{Mermaid Live Editor:} \href{[https://mermaid.live/](https://mermaid.live/)}{[https://mermaid.live/](https://mermaid.live/)} - \textit{Test all diagrams here before committing!}
+    \item \textbf{GitHub Docs: Creating Mermaid Diagrams:} \href{[https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)}{[https://docs.github.com/en/.../creating-diagrams](https://docs.github.com/en/.../creating-diagrams)}
+    \item \textbf{UML Class Diagram Reference:} \href{[https://www.ibm.com/docs/en/rational-soft-arch/9.7.0?topic=diagrams-class](https://www.ibm.com/docs/en/rational-soft-arch/9.7.0?topic=diagrams-class)}{IBM UML Documentation}
+    \item \textbf{UML Component Diagram Reference:} \href{https://www.ibm.com/docs/en/rational-soft-arch/9.7.0?topic=diagrams-component}{IBM UML Documentation}
+    \item \textbf{Mermaid Syntax Docs:} \href{[https://mermaid.js.org/intro/](https://mermaid.js.org/intro/)}{[https://mermaid.js.org/intro/](https://mermaid.js.org/intro/)}
+\end{itemize}
+
+\end{document}
