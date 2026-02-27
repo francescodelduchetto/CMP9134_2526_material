@@ -135,11 +135,53 @@ docker run -p 5000:5000 ghcr.io/francescodelduchetto/cmp9134_2526_robotsim:lates
     \item Analyze the visualized documentation. You should identify specific endpoints such as \texttt{/api/status} and \texttt{/api/move}.
     \item Expand the \texttt{POST /api/move} endpoint and inspect the required schema. Try sending a request through the web interface to see how the system responds.
     \item \textbf{Update your Trello Requirements:} Go to your Trello board and find the User Story related to navigating the robot. Add the exact interface requirements you discovered as \textbf{Acceptance Criteria}, for example:
-    \begin{itemize}
-        \item \textit{"The UI must send a POST request to \texttt{/api/move} with a JSON payload containing 'x' and 'y'."}
-        \item \textit{"The UI must ensure X and Y inputs match the expected data types specified in the API documentation to prevent 422 Validation Errors."}
+\begin{itemize}
+        \item \textit{"The dashboard must allow the Commander to input whole numbers for the X and Y coordinates to move the robot."}
+        \item \textit{"If the Commander enters invalid characters (e.g., letters or decimals) for the coordinates, the system must display a clear error message and prevent the robot from moving, rather than crashing."}
     \end{itemize}
-    Go back to the lecture slides and review all the different types of (non-functional) requirements you can add as Acceptance Criteria to make your User Stories more robust and testable.
+    Go back to the lecture slides and review all the different types of (non-functional) requirements you can add as Acceptance Criteria to make your User Stories more robust and testable. Remember that ``good'' Acceptance Criteria must be: \\
+    - \textbf{Testable:} There is a clear pass/fail outcome. \\
+    - \textbf{Clear \& Concise:} Easy for non-technical stakeholders to understand. \\
+    - \textbf{User Perspective:} Focused on the end-user experience, not the backend code. \\
+    - \textbf{Comprehensive:} Covers both the 'happy path' and negative edge cases. \\ \\
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 4
+%----------------------------------------------------------------------------------------
+
+\section*{Task 4: Validating Requirements with an AI Stakeholder Persona}
+
+\textbf{Goal:} Refine and validate your Acceptance Criteria by simulating a stakeholder review using an AI tool.
+
+\textbf{The Concept:} In Agile, requirements must be validated by the Product Owner or stakeholders to ensure they accurately reflect business and safety needs. Since you are working solo on Assessment 1, you can use Generative AI (like ChatGPT, Claude, or Gemini) to adopt a specific "persona" to critique your User Stories and Acceptance Criteria. This utilizes the "Persona Pattern" in prompt engineering.
+
+
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Open an AI tool of your choice (we suggest Microsoft Copilot with your university account).
+    \item Copy the User Story and Acceptance Criteria you updated in Task 3.
+    \item Use the following \textbf{Prompt Template} to personify the AI, and provide the assessment brief and a PDF printout of the Virtual Robot Details for context on the project tasks(from Blackboard: Assessments $\rightarrow$ Assessment 1 $\rightarrow$ Virtual Robot Details $\rightarrow$ print the page to pdf). Fill in the bracketed information with your Task 3 data:
+    
+    \begin{center}
+    \fbox{%
+    \begin{minipage}{0.9\linewidth}
+    \textit{"Act as the \textbf{[Chief Safety Officer / Non-Technical Operator]} for a warehouse deploying a new Virtual Robot Management System. I am the lead software engineer. I am going to provide you with a User Story and its Acceptance Criteria for [\textbf{Insert your User Story Title}]. \\ \\
+    Please review them from your perspective and tell me: \\
+    1. Are there any safety, security, or usability edge cases I missed? \\
+    2. Is the language clear enough for a non-technical stakeholder to approve? \\ \\
+    Here is the User Story: \textbf{[Insert your User Story]} \\
+    Here are the Acceptance Criteria: \textbf{[Insert your Acceptance Criteria]}"}
+    \end{minipage}%
+    }
+    \end{center}
+
+    \item Analyze the AI's feedback. Did it suggest adding a confirmation prompt before the robot moves? Did it suggest handling network timeouts? 
+    \item \textbf{Refine your Requirements:} Add at least one valid suggestion from the AI to your Trello card's Acceptance Criteria.
+    \item \textbf{CRITICAL STEP:} To comply with Assessment 1 regulations, you \textbf{must} log this AI interaction. Open your project's "AI Verification Log" (as required in Appendix A of the brief) and document the prompt you used, the AI's suggestion, and how you validated and applied that suggestion.
+    \item Feel free to experiment with different personas to get diverse perspectives on your requirements!
 \end{enumerate}
 
 %----------------------------------------------------------------------------------------
@@ -170,7 +212,7 @@ docker run -p 5000:5000 ghcr.io/francescodelduchetto/cmp9134_2526_robotsim:lates
 \section*{Further Resources}
 
 \begin{itemize}
-    \item \textbf{Docker Desktop Installation (Not needed for PCs in INB labs):} \\\href{https://docs.docker.com/desktop/}{https://docs.docker.com/desktop/}
+    \item \textbf{Personas: Why and How You Should Use Them:} \\\href{https://www.interaction-design.org/literature/article/personas-why-and-how-you-should-use-them}{https://www.interaction-design.org/literature/article/personas-why-and-how-you-should-use-them}
     \item \textbf{Acceptance Criteria: Examples and Best Practices:} \\\href{https://www.atlassian.com/work-management/project-management/acceptance-criteria}{https://www.atlassian.com/work-management/project-management/acceptance-criteria}
     \item \textbf{ICO Guide to GDPR (UK):} \\\href{https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/}{https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/}
     \item \textbf{GitHub Docs: Creating a Pull Request Template:} \\\href{https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository}{https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository}
