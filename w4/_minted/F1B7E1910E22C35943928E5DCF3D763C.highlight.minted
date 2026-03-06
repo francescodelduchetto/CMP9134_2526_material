@@ -1,0 +1,16 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+sequenceDiagram
+    actor C as Commander
+    participant UI as Web Dashboard
+    participant API as Python/Node Backend
+    participant Sim as Virtual Robot (Docker)
+
+    C\PYGZhy{}\PYGZgt{}\PYGZgt{}UI: Enter X, Y and click \PYGZsq{}Move\PYGZsq{}
+    UI\PYGZhy{}\PYGZgt{}\PYGZgt{}API: POST /api/command \PYGZob{}x: 5, y: 10\PYGZcb{}
+
+    activate API
+    API\PYGZhy{}\PYGZgt{}\PYGZgt{}Sim: POST /api/move \PYGZob{}x: 5, y: 10\PYGZcb{}
+    Sim\PYGZhy{}\PYGZhy{}\PYGZgt{}\PYGZgt{}API: 200 OK
+    API\PYGZhy{}\PYGZhy{}\PYGZgt{}\PYGZgt{}UI: 200 OK
+    deactivate API
+\end{MintedVerbatim}

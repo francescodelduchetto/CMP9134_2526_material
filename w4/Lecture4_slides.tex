@@ -11,7 +11,7 @@
         \usebeamerfont{section in head/foot}
         \hspace{0.5cm}
         \ifnum\insertframenumber<30
-            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 123456}}
+            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 871550}}
         \fi
         \hspace{0.5cm}
     \end{beamercolorbox}
@@ -807,24 +807,24 @@ these.
     \textit{Question to the room: Who are the actors and what are the use cases?}
 \end{frame}
 
-% \begin{frame}
-%     \frametitle{Step 1: The Use Case Diagram (Solution)}
-%     \textbf{Actors:}
-%     \begin{itemize}
-%         \item Customer (Human)
-%         \item Chef (Human)
-%         \item Payment Gateway (External System)
-%     \end{itemize}
+\begin{frame}
+    \frametitle{Step 1: The Use Case Diagram (Solution)}
+    \textbf{Actors:}
+    \begin{itemize}
+        \item Customer (Human)
+        \item Chef (Human)
+        \item Payment Gateway (External System)
+    \end{itemize}
     
-%     \vspace{0.2cm}
-%     \textbf{Use Cases (What are the bubbles?):}
-%     \begin{itemize}
-%         \item Browse Menu
-%         \item Place Order
-%         \item Process Payment
-%         \item Update Order Status
-%     \end{itemize}
-% \end{frame}
+    \vspace{0.2cm}
+    \textbf{Use Cases (What are the bubbles?):}
+    \begin{itemize}
+        \item Browse Menu
+        \item Place Order
+        \item Process Payment
+        \item Update Order Status
+    \end{itemize}
+\end{frame}
 
 \begin{frame}
     \frametitle{Step 2: The Sequence Diagram}
@@ -834,16 +834,16 @@ these.
     \textit{Question to the room: What are the "Lifelines" (vertical lines) going to be across the top?}
 \end{frame}
 
-% \begin{frame}
-%     \frametitle{Step 2: The Sequence Diagram (Solution)}
-%     \textbf{Timeline Draft:}
-%     \begin{enumerate}
-%         \item \texttt{Customer} sends `submitOrder()` to \texttt{WebInterface}.
-%         \item \texttt{WebInterface} sends `processCharge()` to \texttt{PaymentGateway}.
-%         \item \texttt{PaymentGateway} returns `Payment Success`.
-%         \item \texttt{WebInterface} sends `createTicket()` to \texttt{KitchenSystem}.
-%     \end{enumerate}
-% \end{frame}
+\begin{frame}
+    \frametitle{Step 2: The Sequence Diagram (Solution)}
+    \textbf{Timeline Draft:}
+    \begin{enumerate}
+        \item \texttt{Customer} sends `submitOrder()` to \texttt{WebInterface}.
+        \item \texttt{WebInterface} sends `processCharge()` to \texttt{PaymentGateway}.
+        \item \texttt{PaymentGateway} returns `Payment Success`.
+        \item \texttt{WebInterface} sends `createTicket()` to \texttt{KitchenSystem}.
+    \end{enumerate}
+\end{frame}
 
 \begin{frame}[fragile]
     \frametitle{Step 3: The Class Diagram (OOP)}
@@ -853,42 +853,42 @@ these.
     \textit{Question to the room: What are the main classes and their relationships?}
 \end{frame}
 
-% \begin{frame}[fragile]
-%     \frametitle{Step 3: The Class Diagram (OOP) (Solution)}
-%     \centering
-%     \begin{tikzpicture}[
-%         classbox/.style={
-%             rectangle split, rectangle split parts=3, 
-%             draw=black, fill=white, thick, 
-%             text width=3cm, align=left, 
-%             font=\scriptsize
-%         },
-%         arrow/.style={->, >=stealth, thick}
-%     ]
-%         \node[classbox, fill=green!10] (order) {
-%             \nodepart{one} \centering \textbf{Order}
-%             \nodepart{two} 
-%             - orderID: int\\
-%             - status: String\\
-%             - totalCost: float
-%             \nodepart{three}
-%             + calculateTotal()\\
-%             + updateStatus()
-%         };
+\begin{frame}[fragile]
+    \frametitle{Step 3: The Class Diagram (OOP) (Solution)}
+    \centering
+    \begin{tikzpicture}[
+        classbox/.style={
+            rectangle split, rectangle split parts=3, 
+            draw=black, fill=white, thick, 
+            text width=3cm, align=left, 
+            font=\scriptsize
+        },
+        arrow/.style={->, >=stealth, thick}
+    ]
+        \node[classbox, fill=green!10] (order) {
+            \nodepart{one} \centering \textbf{Order}
+            \nodepart{two} 
+            - orderID: int\\
+            - status: String\\
+            - totalCost: float
+            \nodepart{three}
+            + calculateTotal()\\
+            + updateStatus()
+        };
         
-%         \node[classbox, fill=orange!10, right=1.5cm of order] (pizza) {
-%             \nodepart{one} \centering \textbf{Pizza}
-%             \nodepart{two} 
-%             - size: String\\
-%             - toppings: List
-%             \nodepart{three}
-%             + getPrice()
-%         };
+        \node[classbox, fill=orange!10, right=1.5cm of order] (pizza) {
+            \nodepart{one} \centering \textbf{Pizza}
+            \nodepart{two} 
+            - size: String\\
+            - toppings: List
+            \nodepart{three}
+            + getPrice()
+        };
         
-%         \draw[thick] (order.east) -- (pizza.west) node[midway, above] {\scriptsize 1 .. *};
-%         \node[below=0.1cm of pizza] {\textit{One Order 'contains' many Pizzas}};
-%     \end{tikzpicture}
-% \end{frame}
+        \draw[thick] (order.east) -- (pizza.west) node[midway, above] {\scriptsize 1 .. *};
+        \node[below=0.1cm of pizza] {\textit{One Order 'contains' many Pizzas}};
+    \end{tikzpicture}
+\end{frame}
 
 \begin{frame}[fragile]
     \frametitle{Step 4: The Activity Diagram}
@@ -898,40 +898,40 @@ these.
     \textit{Question to the room: What happens if the payment fails?}
 \end{frame}
 
-% \begin{frame}[fragile]
-%     \frametitle{Step 4: The Activity Diagram (Solution)}
-%     \centering
-%     \resizebox{0.9\textwidth}{!}{%
-%     \begin{tikzpicture}[%
-%         activity/.style={rectangle, draw=cyan!80, fill=cyan!10, thick, rounded corners, minimum width=2cm, minimum height=0.8cm, align=center, font=\scriptsize},
-%         decision/.style={diamond, draw=cyan!80, thick, minimum size=0.6cm, inner sep=0pt, align=center},
-%         start/.style={circle, fill=cyan!80, minimum size=0.4cm},
-%         end/.style={circle, draw=cyan!80, thick, inner sep=0pt, minimum size=0.5cm, path picture={\fill[cyan!80] (path picture bounding box.center) circle (0.15cm);}},
-%         arrow/.style={->, >=stealth, thick, gray!80!black}%
-%     ]
-%         \node[start] (start) at (0, 0) {};
-%         \node[activity] (recv) at (2, 0) {Receive\\Order};
-%         \node[activity] (pay) at (4.5, 0) {Process\\Payment};
-%         \node[decision, fill=white] (dec) at (7, 0) {Payment\\OK?};
+\begin{frame}[fragile]
+    \frametitle{Step 4: The Activity Diagram (Solution)}
+    \centering
+    \resizebox{0.9\textwidth}{!}{%
+    \begin{tikzpicture}[%
+        activity/.style={rectangle, draw=cyan!80, fill=cyan!10, thick, rounded corners, minimum width=2cm, minimum height=0.8cm, align=center, font=\scriptsize},
+        decision/.style={diamond, draw=cyan!80, thick, minimum size=0.6cm, inner sep=0pt, align=center},
+        start/.style={circle, fill=cyan!80, minimum size=0.4cm},
+        end/.style={circle, draw=cyan!80, thick, inner sep=0pt, minimum size=0.5cm, path picture={\fill[cyan!80] (path picture bounding box.center) circle (0.15cm);}},
+        arrow/.style={->, >=stealth, thick, gray!80!black}%
+    ]
+        \node[start] (start) at (0, 0) {};
+        \node[activity] (recv) at (2, 0) {Receive\\Order};
+        \node[activity] (pay) at (4.5, 0) {Process\\Payment};
+        \node[decision, fill=white] (dec) at (7, 0) {Payment\\OK?};
         
-%         \node[activity] (kitchen) at (9.5, 1) {Send to\\Kitchen};
-%         \node[activity] (fail) at (9.5, -1) {Notify\\Customer};
+        \node[activity] (kitchen) at (9.5, 1) {Send to\\Kitchen};
+        \node[activity] (fail) at (9.5, -1) {Notify\\Customer};
         
-%         \node[end] (end1) at (12, 1) {};
-%         \node[end] (end2) at (12, -1) {};
+        \node[end] (end1) at (12, 1) {};
+        \node[end] (end2) at (12, -1) {};
 
-%         \draw[arrow] (start) -- (recv);
-%         \draw[arrow] (recv) -- (pay);
-%         \draw[arrow] (pay) -- (dec);
+        \draw[arrow] (start) -- (recv);
+        \draw[arrow] (recv) -- (pay);
+        \draw[arrow] (pay) -- (dec);
         
-%         \draw[arrow] (dec) |- node[near start, above left, font=\tiny] {[Yes]} (kitchen.west);
-%         \draw[arrow] (dec) |- node[near start, below left, font=\tiny] {[No]} (fail.west);
+        \draw[arrow] (dec) |- node[near start, above left, font=\tiny] {[Yes]} (kitchen.west);
+        \draw[arrow] (dec) |- node[near start, below left, font=\tiny] {[No]} (fail.west);
         
-%         \draw[arrow] (kitchen) -- (end1);
-%         \draw[arrow] (fail) -- (end2);
-%     \end{tikzpicture}%
-%     }%
-% \end{frame}
+        \draw[arrow] (kitchen) -- (end1);
+        \draw[arrow] (fail) -- (end2);
+    \end{tikzpicture}%
+    }%
+\end{frame}
 
 %------------------------------------------------------------
 \section{Next Steps}
@@ -955,6 +955,7 @@ these.
         \item \textbf{Recommended Reading:} 
         Sommerville, \textit{Software Engineering 9th Edition}, Chapter 5 (System Modeling).
         % \item \textbf{Mermaid.js:} Highly recommended! It allows you to generate UML diagrams using markdown text directly in your GitHub README files.
+        \item \textbf{Next Week:} We will cover \textbf{Software Patterns and Reuse}.
     \end{itemize}
 \end{frame}
 

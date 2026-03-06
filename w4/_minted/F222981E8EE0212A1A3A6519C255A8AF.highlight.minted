@@ -1,0 +1,14 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+stateDiagram\PYGZhy{}v2
+    [*] \PYGZhy{}\PYGZhy{}\PYGZgt{} ReceiveRequest
+    ReceiveRequest \PYGZhy{}\PYGZhy{}\PYGZgt{} CheckRole
+
+    state check\PYGZus{}role \PYGZlt{}\PYGZlt{}choice\PYGZgt{}\PYGZgt{}
+    CheckRole \PYGZhy{}\PYGZhy{}\PYGZgt{} check\PYGZus{}role
+
+    check\PYGZus{}role \PYGZhy{}\PYGZhy{}\PYGZgt{} RejectCommand : Role is Viewer
+    check\PYGZus{}role \PYGZhy{}\PYGZhy{}\PYGZgt{} SendToRobot : Role is Commander
+
+    RejectCommand \PYGZhy{}\PYGZhy{}\PYGZgt{} [*]
+    SendToRobot \PYGZhy{}\PYGZhy{}\PYGZgt{} [*]
+\end{MintedVerbatim}

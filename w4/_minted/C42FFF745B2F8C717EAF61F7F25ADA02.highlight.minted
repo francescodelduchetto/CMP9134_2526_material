@@ -1,0 +1,18 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+classDiagram
+    class User \PYGZob{}
+        \PYGZhy{}String username
+        \PYGZhy{}String passwordHash
+        \PYGZhy{}String role
+        +login() bool
+        +getRole() String
+    \PYGZcb{}
+
+    class RobotController \PYGZob{}
+        \PYGZhy{}String apiEndpoint
+        +getStatus() JSON
+        +moveRobot(int x, int y) bool
+    \PYGZcb{}
+
+    User \PYGZdq{}1\PYGZdq{} \PYGZhy{}\PYGZhy{}\PYGZgt{} \PYGZdq{}1\PYGZdq{} RobotController : Uses
+\end{MintedVerbatim}

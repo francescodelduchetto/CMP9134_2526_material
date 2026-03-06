@@ -1,0 +1,15 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+flowchart LR
+    \PYGZpc{}\PYGZpc{} Define Actors
+    C[Commander]
+    V[Viewer]
+
+    \PYGZpc{}\PYGZpc{} Define Use Cases
+    Move((Move Robot))
+    Status((View Status))
+
+    \PYGZpc{}\PYGZpc{} Connect Actors to Use Cases
+    C \PYGZhy{}\PYGZhy{}\PYGZgt{} Move
+    C \PYGZhy{}\PYGZhy{}\PYGZgt{} Status
+    V \PYGZhy{}\PYGZhy{}\PYGZgt{} Status
+\end{MintedVerbatim}
