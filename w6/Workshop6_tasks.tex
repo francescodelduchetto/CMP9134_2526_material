@@ -1,0 +1,207 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% Geometry setup
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{CMP9134: Software Engineering}}
+\rhead{\textbf{Week 6}}
+\lfoot{University of Lincoln}
+\rfoot{Page \thepage}
+
+% Color definitions
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%   TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{center}
+    \LARGE \textbf{Lab Sheet 6: HCI \& Design Thinking} \\
+    \vspace{0.5cm}
+    \large \textbf{Objectives}
+\end{center}
+
+\noindent By completing today's workshop, you will:
+\begin{itemize}
+    \item Apply Human-Computer Interaction (HCI) principles to design a User Interface (UI).
+    \item Create a low-fidelity wireframe prototype of your Ground Control Station dashboard.
+    \item Conduct a Heuristic Evaluation of your prototype with human peers and an AI assistant.
+    \item Build an interactive "Limited functionality simulation" using frontend code or Generative AI tools.
+    \item Perform an automated Accessibility audit to ensure LEPSI/WCAG compliance.
+\end{itemize}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Introduction: Prototyping Your Dashboard}
+In your Assessment 1 project, you are tasked with building a web-based Ground Control Station to interact with a Virtual Robot. A common mistake in software engineering is jumping straight into writing HTML, CSS, and JavaScript before knowing what the user actually needs. Today, we will use the \textbf{Design Thinking} methodology to Prototype and Test your interface before you write any production code.
+
+%----------------------------------------------------------------------------------------
+%   TASK 1
+%----------------------------------------------------------------------------------------
+
+\section*{Task 1: Wireframing the Web Dashboard}
+
+\textbf{Goal:} Design the layout of your Ground Control Station and map out one specific feature in detail.
+
+\textbf{The Concept:} Wireframes are low-fidelity visual representations of your interface. They focus on layout, information architecture, and user flow rather than colors and typography.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Grab a pen and paper, or open a digital wireframing tool like \href{https://www.figma.com/}{Figma} or \href{https://excalidraw.com/}{Excalidraw}.
+    \item \textbf{The Main Dashboard:} Sketch the primary view of your Ground Control Station. Ensure you include:
+    \begin{itemize}
+        \item A navigation bar/menu.
+        \item A display for the Robot's current status (Battery, Status, X/Y Position).
+        \item A visual indication of the current user's Role (Commander, Viewer, etc.).
+    \end{itemize}
+    \item \textbf{Deep-Dive Feature:} Pick one complex feature (e.g., The "Move Robot" control panel or the "Mission Audit Log") and draw a detailed, zoomed-in sequence of how the user interacts with it.
+    \item \textit{Check:} Did you apply Fitts's Law? Are your primary action buttons (like "Move" or "Emergency Stop") large and easily accessible?
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 2
+%----------------------------------------------------------------------------------------
+
+\section*{Task 2: Peer and AI Usability Evaluation}
+
+\textbf{Goal:} Evaluate the effectiveness of your design using established heuristics before building it.
+
+\textbf{The Concept:} We will simulate a Heuristic Evaluation. You will gather feedback from two different sources: your human peers (who understand the project context) and a multimodal AI model.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item \textbf{Peer Evaluation:} Show your sketches to at least \textbf{two other students} in the room. Ask them to evaluate your UI against Shneiderman's Golden Rules (e.g., "Is there informative feedback when I click 'Move'?", "Is there an easy reversal/undo option?"). Write down their feedback.
+    \item \textbf{AI Evaluation:} Take a clear photo or screenshot of your wireframe.
+    \item Open a multimodal AI (with your student account, you have free access to GitHub Copilot Pro: \href{https://github.com/copilot}{https://github.com/copilot})  and upload your image.
+    \item Use the following prompt to ask the AI for a formal critique:
+    \begin{center}
+    \fbox{%
+    \begin{minipage}{0.9\linewidth}
+\textit{
+You are an expert UX/UI Researcher. I have uploaded a low-fidelity wireframe of a Ground Control Station dashboard used to pilot a Virtual Robot. 
+Please conduct a Heuristic Evaluation of this interface based on Norman's 7 Principles and Shneiderman's 8 Golden Rules. 
+Identify at least 3 usability issues and suggest specific improvements.
+}
+    \end{minipage}%
+    }
+    \end{center}
+    \item \textbf{Refine:} Compare the feedback from your peers and the AI. Redraw or update your wireframe to fix the identified usability issues.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 3
+%----------------------------------------------------------------------------------------
+
+\section*{Task 3: Limited Functionality Simulation (Interactive Prototype)}
+
+\textbf{Goal:} Create a working, interactive prototype of your dashboard in the browser.
+
+\textbf{The Concept:} In HCI, a "Limited functionality simulation" is a prototype that looks and feels like the final product but doesn't have a real backend connected to it. You must convert your refined wireframe from Task 2 into actual frontend code (HTML/CSS/JS). 
+
+\vspace{0.3cm}
+\textbf{Action (Choose Path A or Path B):}
+
+\textbf{$\rightarrow$Path A: For students with Web Development Experience}
+\begin{itemize}
+    \item Manually code your dashboard based on your wireframe.
+    \item Instead of writing all the CSS from scratch, we highly recommend using a \textbf{UI Framework}. Frameworks provide pre-built, standardized, and accessible components (buttons, navbars, grid systems).
+    \item \textbf{Recommended Frameworks:} \href{https://getbootstrap.com/}{Bootstrap}, \href{https://tailwindcss.com/}{Tailwind CSS}, or your favourite one.
+\end{itemize}
+
+\textbf{$\rightarrow$Path B: For beginners (AI-Assisted)}
+\begin{itemize}
+    \item If you have zero frontend experience, you can use Generative AI tools (with your student account, you have free access to GitHub Copilot Pro: \href{https://github.com/copilot}{https://github.com/copilot}) to translate your sketch into code.
+    \item Upload your final wireframe and provide a prompt describing the styling you want, such as:
+    \begin{center}
+    \fbox{%
+    \begin{minipage}{0.9\linewidth}
+\textit{Act as an expert Frontend Developer. Look at the wireframe I uploaded for a Robot Ground Control Station. 
+Please generate a single-file "Limited functionality simulation" (HTML, CSS, and vanilla JavaScript) of this dashboard using the Bootstrap 5 framework. 
+Make the styling modern, using a dark-mode theme suitable for a robotics control room. 
+Make the "Move" button interactive so that clicking it shows a mock success notification.}
+    \end{minipage}%
+    }
+    \end{center}
+    \item Of course, the AI-generated code will not be perfect. You will need to review it, understand it, and make manual adjustments to ensure it matches your design and is functional. \textbf{Importantly, as with any AI usage, document your process as detailed in the assessment brief.}
+\end{itemize}
+
+\textbf{Final Step for both paths:} Save the resulting code into your project repository and open it in your web browser to test. This will serve as the foundational starting point for your Assessment 1 frontend!
+
+%----------------------------------------------------------------------------------------
+%   TASK 4 (STRETCH)
+%----------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------
+%   TASK 4 (STRETCH)
+%----------------------------------------------------------------------------------------
+
+\section*{Task 4: Accessibility Audit}
+
+\textbf{Goal:} Ensure your interactive prototype is compliant with LEPSI and WCAG accessibility standards without relying on specific browser extensions.
+
+\textbf{The Concept:} A beautiful interface is useless if visually impaired or motor-impaired users cannot navigate it. We will conduct a three-part browser-agnostic accessibility audit focusing on Structure, Contrast, and Keyboard Navigation.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item \textbf{Structural Audit (W3C):} Go to the \href{https://validator.w3.org/#validate_by_upload}{W3C Markup Validation Service}. Select "Validate by File Upload" and upload your html file. 
+    \begin{itemize}
+        \item Look for structural accessibility errors, such as missing \texttt{alt} attributes on images, missing \texttt{<label>} tags for inputs, or missing \texttt{<title>} tags.
+    \end{itemize}
+    \item \textbf{Color Contrast Audit (WebAIM):} Open the \href{https://webaim.org/resources/contrastchecker/}{WebAIM Contrast Checker} in your browser. 
+    \begin{itemize}
+        \item Enter the exact HEX color codes of your dark-mode background and your text. 
+        \item Does it pass the WCAG AA standard (a ratio of at least 4.5:1)? If it fails, adjust your CSS colors until it passes.
+    \end{itemize}
+    \item \textbf{Manual Keyboard Audit:} Open your HTML file in \textit{any} web browser. Take your hand off your mouse/trackpad.
+    \begin{itemize}
+        \item Try to navigate to your "Move Robot" button using \textbf{ONLY} the \texttt{Tab} key, and "click" it using the \texttt{Enter} key. 
+        \item Is it visually obvious which element currently has keyboard focus? If not, you need to add \texttt{:focus} styles to your CSS!
+    \end{itemize}
+    \item \textbf{Fix the Code:} Update your HTML/CSS to resolve any issues discovered during these three tests.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   RESOURCES
+%----------------------------------------------------------------------------------------
+
+\section*{Further Resources}
+
+\begin{itemize}
+    \item \textbf{Bootstrap Documentation:} \href{https://getbootstrap.com/docs/5.3/getting-started/introduction/}{https://getbootstrap.com/} - \textit{The most popular UI framework for rapidly building responsive layouts.}
+    % \item \textbf{v0 by Vercel:} \href{https://v0.dev/}{https://v0.dev/} - \textit{An AI tool specifically designed to generate React/HTML UIs from text prompts and images.}
+    \item \textbf{W3C Markup Validator:} \href{https://validator.w3.org/}{https://validator.w3.org/} - \textit{The official tool to check your HTML for structural and accessibility errors.}
+    \item \textbf{WebAIM Contrast Checker:} \href{https://webaim.org/resources/contrastchecker/}{https://webaim.org/resources/contrastchecker/} - \textit{Ensure your UI colors are legally compliant with WCAG guidelines.}
+    \item \textbf{10 Usability Heuristics (NN/g):} \href{https://www.nngroup.com/articles/ten-usability-heuristics/}{nngroup.com/articles/ten-usability-heuristics/}
+\end{itemize}
+
+\end{document}
+
+%----------------------------------------------------------------------------------------
+%   RESOURCES
+%----------------------------------------------------------------------------------------
+
+% \section*{Further Resources}
+
+% \begin{itemize}
+%     \item \textbf{Bootstrap 5 Documentation:} \href{https://getbootstrap.com/docs/5.3/getting-started/introduction/}{https://getbootstrap.com/} - \textit{One of the most popular UI framework for rapidly building responsive layouts.}
+%     \item \textbf{Google Lighthouse (Accessibility Auditing):}\\ \href{https://developer.chrome.com/docs/lighthouse/accessibility/}{developer.chrome.com/docs/lighthouse/accessibility/}
+% \end{itemize}
+
+\end{document}

@@ -1,0 +1,5 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+You are an expert UX/UI Researcher. I have uploaded a low\PYGZhy{}fidelity wireframe of a Ground Control Station dashboard used to pilot a Virtual Robot.
+Please conduct a Heuristic Evaluation of this interface based on Norman\PYGZsq{}s 7 Principles and Shneiderman\PYGZsq{}s 8 Golden Rules.
+Identify at least 3 usability issues and suggest specific improvements.
+\end{MintedVerbatim}
