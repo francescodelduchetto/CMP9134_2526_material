@@ -1,0 +1,206 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% Geometry setup
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{CMP9134: Software Engineering}}
+\rhead{\textbf{Week 8}}
+\lfoot{University of Lincoln}
+\rfoot{Page \thepage}
+
+% Color definitions
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%   TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{center}
+    \LARGE \textbf{Lab Sheet 8: Software Testing \& CI/CD} \\
+    \vspace{0.5cm}
+    \large \textbf{Objectives}
+\end{center}
+
+\noindent By completing today's workshop, you will:
+\begin{itemize}
+    \item Write functional \textbf{Unit Tests} for your backend application logic.
+    \item Implement \textbf{Integration Tests} to verify your API routes and Dockerized service communication.
+    \item Automate your testing strategy by building a \textbf{Continuous Integration (CI)} pipeline using GitHub Actions.
+\end{itemize}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Introduction: Securing your Codebase}
+In Assessment 1, you are building a critical system (a Robot Ground Control Station). You must ensure that users cannot bypass Role-Based Access Control (RBAC) and that invalid coordinates are not sent to the physical (or virtual) robot. Manual testing is too slow. Today, you will establish an automated testing safety net.
+
+\textit{Note: The examples below use Python and \texttt{pytest}. If you are building a Node.js backend, you should adapt these concepts using \texttt{Jest} or \texttt{Mocha}.}
+
+%----------------------------------------------------------------------------------------
+%   TASK 1
+%----------------------------------------------------------------------------------------
+
+\section*{Task 1: Writing Unit Tests (The Base of the Pyramid)}
+
+\textbf{Goal:} Test small, isolated pieces of your application logic.
+
+\textbf{The Concept:} Unit tests do not need a database or network connection. They test raw logic. Let's test a hypothetical coordinate validator.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item In your backend codebase, create a new folder called \texttt{tests/}.
+    \item Create a file called \texttt{test\_validation.py}.
+    \item Write a simple function and an accompanying test. Notice the "Arrange, Act, Assert" pattern:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{python}
+# The logic (usually imported from your main code)
+def is_valid_target(x, y):
+    if x < 0 or x > 100 or y < 0 or y > 100:
+        return False
+    return True
+
+# The test
+def test_valid_coordinates():
+    # Arrange (Setup inputs)
+    good_x, good_y = 50, 50
+    bad_x, bad_y = 150, -10
+    
+    # Act (Run the function)
+    result_good = is_valid_target(good_x, good_y)
+    result_bad = is_valid_target(bad_x, bad_y)
+    
+    # Assert (Check the outcomes)
+    assert result_good == True
+    assert result_bad == False
+    \end{minted}
+    \item Run your test locally in the terminal (e.g., by typing \texttt{pytest} or \texttt{npm test}). Ensure it passes.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 2
+%----------------------------------------------------------------------------------------
+
+\section*{Task 2: API Integration Testing}
+
+\textbf{Goal:} Test that your web server responds correctly to HTTP requests.
+
+\textbf{The Concept:} Integration tests ensure that the routing and request handling work. For instance, if someone tries to hit your \texttt{/api/move} endpoint without an authentication token, it should reject them.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item In your \texttt{tests/} folder, create \texttt{test\_api.py}.
+    \item Write an integration test that hits your local application framework. (If using FastAPI/Flask in Python, you can use a TestClient. If using Express in Node, use Supertest).
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{python}
+from fastapi.testclient import TestClient
+from main import app # Import your actual app
+
+client = TestClient(app)
+
+def test_unauthorized_move():
+    # Attempting to move without a token
+    response = client.post("/api/move", json={"x": 10, "y": 10})
+    
+    # The API should block this and return a 401 Unauthorized status
+    assert response.status_code == 401
+    \end{minted}
+    \item \textbf{Extend the Test:} Write a second test that passes a valid "Viewer" role token. Assert that the API returns a \texttt{403 Forbidden} (because Viewers cannot move the robot).
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 3
+%----------------------------------------------------------------------------------------
+
+\section*{Task 3: Automating with GitHub Actions (CI/CD)}
+
+\textbf{Goal:} Ensure your tests run automatically every time you push code to GitHub.
+
+\textbf{The Concept:} You have written tests, but humans forget to run them. Continuous Integration (CI) uses a server to spin up an environment, install your dependencies, and run the tests automatically on every commit.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item In the root directory of your repository, create the following folder structure: \texttt{.github/workflows/}.
+    \item Inside that folder, create a file called \texttt{ci-tests.yml}.
+    \item Paste in the following YAML configuration. (Modify the setup steps if you are using Node.js instead of Python):
+    \begin{minted}[bgcolor=lightgray, fontsize=\scriptsize]{yaml}
+name: Automated Testing Pipeline
+
+# Trigger this workflow on every push to the main branch
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        pip install pytest fastapi
+        # Add any other requirements.txt installations here
+
+    - name: Run test suite
+      run: |
+        pytest
+    \end{minted}
+    \item Commit and push this file to GitHub.
+    \item Go to your GitHub repository in the browser, click the \textbf{Actions} tab, and watch your pipeline build and test your code automatically!
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 4 (STRETCH)
+%----------------------------------------------------------------------------------------
+
+\section*{Task 4: Test Coverage Reporting}
+
+\textbf{Goal:} Generate a report detailing exactly what percentage of your codebase is covered by tests.
+
+\textbf{The Concept:} Code coverage tools analyze your application while the tests run to see which lines of code were executed and which were ignored. 
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Install a coverage tool (e.g., \texttt{pytest-cov} for Python or \texttt{nyc} for Node.js).
+    \item Run your tests with the coverage flag: \texttt{pytest --cov=.} 
+    \item Review the terminal output. It will tell you the percentage of code covered. Your goal as an engineer is generally to maintain $>80\%$ coverage for critical systems.
+    \item \textit{Bonus:} Add this coverage step to your GitHub Actions YAML file so the coverage report is generated automatically on the server!
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   RESOURCES
+%----------------------------------------------------------------------------------------
+
+\section*{Further Resources}
+
+\begin{itemize}
+    \item \textbf{PyTest Documentation:} \href{https://docs.pytest.org/en/7.3.x/}{docs.pytest.org} - \textit{The standard testing framework for Python.}
+    \item \textbf{Jest Documentation:} \href{https://jestjs.io/}{jestjs.io} - \textit{A delightful JavaScript Testing Framework with a focus on simplicity.}
+    \item \textbf{GitHub Actions Quickstart:} \href{https://docs.github.com/en/actions/quickstart}{docs.github.com/en/actions} - \textit{Official guide to setting up automated workflows.}
+\end{itemize}
+
+\end{document}
