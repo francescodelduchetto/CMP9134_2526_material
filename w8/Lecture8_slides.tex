@@ -11,7 +11,7 @@
         \usebeamerfont{section in head/foot}
         \hspace{0.5cm}
         \ifnum\insertframenumber<30
-            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 839102}}
+            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 123456}}
         \fi
         \hspace{0.5cm}
     \end{beamercolorbox}
@@ -40,7 +40,7 @@
 \usepackage{tgheros}
 \usepackage{hyperref}
 \usepackage{tikz}
-\usetikzlibrary{shapes, arrows, positioning, shadows, fit, calc, backgrounds}
+\usetikzlibrary{shapes, arrows, arrows.meta, positioning, shadows, fit, calc, backgrounds}
 
 \renewcommand*\familydefault{\sfdefault}
 
@@ -77,7 +77,7 @@
 \end{frame}
 
 %------------------------------------------------------------
-\section{Recap: Week 7}
+\section{Recap \& Introduction}
 %------------------------------------------------------------
 
 \begin{frame}
@@ -85,46 +85,77 @@
     Last week, Prof. Marc Hanheide introduced us to the reality of deploying software in the real world using \textbf{Containerisation}.
     
     \begin{itemize}
-        \item \textbf{The Problem:} "It works on my machine!" 
-        \item \textbf{The Solution:} Docker containers package the application code along with all its dependencies, libraries, and OS configurations into a single, reproducible image.
-        \item \textbf{Microservices:} Using \texttt{docker-compose} to orchestrate multiple independent services (e.g., connecting your Frontend, Backend, and the Virtual Robot Simulator).
+        \item \textbf{The Problem:} "It works on my machine!" Discrepancies between developer laptops and production servers lead to catastrophic deployment failures.
+        \item \textbf{The Solution:} Docker containers package the application code along with all its dependencies, libraries, and OS configurations into a single, immutable, reproducible image.
+        \item \textbf{Microservices:} Using \texttt{docker-compose} to orchestrate multiple independent services (e.g., your Frontend, your FastAPI Backend, and the Virtual Robot Simulator).
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bridging Containers and Testing}
+    Why did we learn about Docker before Software Testing?
+    
+    \vspace{0.3cm}
+    Because \textbf{Automated Testing} relies entirely on predictable environments! 
+    \begin{itemize}
+        \item If a test passes on your laptop but fails on the server, the test is useless.
+        \item By running our automated tests \textit{inside} Docker containers, we guarantee that the test environment is 100\% identical to the production environment.
+    \end{itemize}
+    
     \vspace{0.2cm}
-    \textit{Today, we look at how to leverage those predictable containers to automate our Software Testing!}
+    \textit{Today, we look at the theory, design, and automation of Software Testing.}
 \end{frame}
 
 \begin{frame}
     \frametitle{Today's Learning Objectives}
-    By the end of this lecture, you should be able to:
+    By the end of this comprehensive lecture, you should be able to:
     \begin{enumerate}
-        \item \textbf{Understand} the critical importance of software testing in mitigating real-world deployment risks.
-        \item \textbf{Differentiate} between the various levels of testing (Unit, Integration, System, Acceptance).
-        \item \textbf{Distinguish} between functional and non-functional testing methodologies.
-        \item \textbf{Explain} the concept of the Test Automation Pyramid.
-        \item \textbf{Integrate} automated testing into a Continuous Integration / Continuous Deployment (CI/CD) pipeline.
+        \item \textbf{Explain} the philosophy of testing and the fundamental difference between Verification and Validation.
+        \item \textbf{Map} testing activities to the Software Development Life Cycle (SDLC) using the V-Model.
+        \item \textbf{Apply} rigorous Test Design Techniques (Black-box Boundary Value Analysis vs. White-box Coverage).
+        \item \textbf{Implement} Unit Tests using the Arrange-Act-Assert pattern and Mocking.
+        \item \textbf{Architect} a Continuous Integration / Continuous Deployment (CI/CD) pipeline.
     \end{enumerate}
 \end{frame}
 
 %------------------------------------------------------------
-\section{Software Testing Basics}
+\section{The Philosophy of Testing}
 %------------------------------------------------------------
 
 \begin{frame}
-    \frametitle{Why do we test?}
-    Software bugs are inevitable, but shipping them to production is a choice. Testing ensures software quality, reliability, and security.
+    \frametitle{What is Software Testing?}
+    Testing is the process of evaluating a system or its component(s) with the intent to find whether it satisfies the specified requirements or not.
     
     \vspace{0.3cm}
-    \textbf{Real-World Failures:}
+    \begin{alertblock}{Dijkstra's Theorem}
+        "Program testing can be used to show the presence of bugs, but never to show their absence!" — Edsger W. Dijkstra (1970)
+    \end{alertblock}
+    
+    \vspace{0.3cm}
+    \textbf{The Tester's Mindset:}
     \begin{itemize}
-        \item \textbf{Public Embarrassment:} AI demos failing live on stage (e.g., Google's Gemini launch anomalies, LG's robot refusing to respond at CES 2018).
-        \item \textbf{Financial Ruin:} The Ariane 5 rocket explosion (\$370 million lost due to a simple 64-bit to 16-bit integer overflow bug).
-        \item \textbf{Safety Risks:} In robotics (like your Ground Control Station), an untested "Move" command could cause physical damage to the hardware or environment.
+        \item A developer writes code to make the system \textbf{work}.
+        \item A tester writes code to make the system \textbf{break}.
+        \item A successful test is one that uncovers an as-yet-undiscovered error. An unsuccessful test is one that finds no errors.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Real-World Failures}
+    Software bugs are inevitable, but shipping them to production is a choice. 
+    
+    \vspace{0.3cm}
+    \textbf{Why Testing is Critical:}
+    \begin{itemize}
+        \item \textbf{Public Embarrassment:} AI demos failing live on stage (e.g., Google's Gemini launch anomalies, LG's robot refusing to respond at CES).
+        \item \textbf{Financial Ruin:} The Knight Capital Group lost \$440 million in 45 minutes due to an untested, obsolete trading algorithm being deployed.
+        \item \textbf{Safety Risks:} The Ariane 5 rocket explosion (\$370 million lost). A 64-bit floating-point number was converted to a 16-bit integer, causing an overflow. A simple unit test would have caught this!
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{The Cost of Fixing Defects}
-    The later a bug is found in the Software Development Life Cycle (SDLC), the more expensive it is to fix.
+    Why do we emphasize testing early and often? The later a bug is found in the SDLC, the more exponentially expensive it becomes to fix.
     
     \vspace{0.3cm}
     \centering
@@ -134,64 +165,336 @@
     ]
         % Axes
         \draw[axis] (0,0) -- (8,0) node[right] {SDLC Stage};
-        \draw[axis] (0,0) -- (0,4) node[above] {Relative Cost to Fix};
+        \draw[axis] (0,0) -- (0,4) node[above] {Relative Cost};
         
         % Bars
-        \node[bar, minimum height=0.3cm] at (1, 0.15) {};
+        \node[bar, minimum height=0.2cm] at (1, 0.1) {};
         \node[below, font=\scriptsize, text width=1.5cm, align=center] at (1, 0) {Requirements};
         
-        \node[bar, minimum height=0.6cm] at (3, 0.3) {};
-        \node[below, font=\scriptsize, text width=1.5cm, align=center] at (3, 0) {Architecture\\\& Design};
+        \node[bar, minimum height=0.5cm] at (3, 0.25) {};
+        \node[below, font=\scriptsize, text width=1.5cm, align=center] at (3, 0) {Design};
         
         \node[bar, minimum height=1.2cm] at (5, 0.6) {};
-        \node[below, font=\scriptsize, text width=1.5cm, align=center] at (5, 0) {Implementation\\(Coding)};
+        \node[below, font=\scriptsize, text width=1.5cm, align=center] at (5, 0) {Coding};
         
         \node[bar, minimum height=3.5cm, fill=red!70] at (7, 1.75) {};
-        \node[below, font=\scriptsize, text width=1.5cm, align=center] at (7, 0) {Post-Release\\(Production)};
+        \node[below, font=\scriptsize, text width=1.5cm, align=center] at (7, 0) {Production};
     \end{tikzpicture}
+    
+    \vspace{0.2cm}
+    \scriptsize \textit{Fixing an architectural logic error during the design phase costs \$10 in time. Fixing that same error after the software is deployed to thousands of users costs \$10,000+ in downtime, database rollbacks, patches, and reputation.}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Verification vs. Validation}
+    \small
+    These two terms are often used interchangeably, but in Software Engineering, they mean very different things:
+    
+    % \vspace{0.3cm}
+    \begin{block}{Verification: "Are we building the product right?"}
+        \begin{itemize}
+            \item Checks if the software conforms to its technical specifications and architecture.
+            % \item \textit{Example:} Does the robot API accept a JSON payload with `x` and `y` integers?
+            \item \textbf{Focus:} Code reviews, Unit tests, Integration tests.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Validation: "Are we building the right product?"}
+        \begin{itemize}
+            \item Checks if the software actually fulfills the client's business needs and solves the real-world problem.
+            % \item \textit{Example:} Does the Commander actually find the dashboard useful for moving the robot?
+            \item \textbf{Focus:} User Acceptance Testing (UAT), Usability testing.
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 %------------------------------------------------------------
-\section{Testing Levels}
+\section{Testing Levels \& The V-Model}
+%------------------------------------------------------------
+
+\begin{frame}[fragile]
+    \frametitle{The V-Model}
+    The V-Model demonstrates how every stage of software design has a corresponding, parallel stage of software testing. You do not wait until the end to write tests!
+    
+    \vspace{0.3cm}
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \begin{tikzpicture}[
+        node distance=0.8cm and 1cm, 
+        box/.style={rectangle, draw=blue!80, fill=blue!5, thick, rounded corners, minimum width=3cm, minimum height=0.8cm, align=center, font=\footnotesize},
+        testbox/.style={rectangle, draw=green!60!black, fill=green!5, thick, rounded corners, minimum width=3cm, minimum height=0.8cm, align=center, font=\footnotesize},
+        arrow/.style={->, >=stealth, thick},
+        dashedarrow/.style={<->, >=stealth, dashed, thick, gray}
+    ]
+        % Left side (Design)
+        \node[box] (req) at (0, 4) {Requirements\\Analysis};
+        \node[box] (sys) at (1.5, 2.8) {System\\Design};
+        \node[box] (arch) at (3, 1.6) {Architecture\\Design};
+        \node[box] (mod) at (4.5, 0.4) {Module\\Design};
+        
+        % Bottom
+        \node[rectangle, draw=orange, fill=orange!10, thick, minimum width=2cm, minimum height=0.6cm, font=\footnotesize\bfseries] (code) at (6, -0.8) {Coding};
+        
+        % Right side (Testing)
+        \node[testbox] (acc) at (12, 4) {Acceptance\\Testing};
+        \node[testbox] (systest) at (10.5, 2.8) {System\\Testing};
+        \node[testbox] (int) at (9, 1.6) {Integration\\Testing};
+        \node[testbox] (unit) at (7.5, 0.4) {Unit\\Testing};
+        
+        % Down arrows
+        \draw[arrow] (req) -- (sys);
+        \draw[arrow] (sys) -- (arch);
+        \draw[arrow] (arch) -- (mod);
+        \draw[arrow] (mod) -- (code);
+        
+        % Up arrows
+        \draw[arrow] (code) -- (unit);
+        \draw[arrow] (unit) -- (int);
+        \draw[arrow] (int) -- (systest);
+        \draw[arrow] (systest) -- (acc);
+        
+        % Horizontal connections
+        \draw[dashedarrow] (req) -- node[above, font=\scriptsize] {Validates} (acc);
+        \draw[dashedarrow] (sys) -- node[above, font=\scriptsize] {Verifies} (systest);
+        \draw[dashedarrow] (arch) -- node[above, font=\scriptsize] {Verifies} (int);
+        \draw[dashedarrow] (mod) -- node[above, font=\scriptsize] {Verifies} (unit);
+    \end{tikzpicture}
+    }
+\end{frame}
+
+\begin{frame}
+    \frametitle{Testing Level 1: Unit Testing}
+    \textbf{Definition:} Tests individual components, methods, or functions in total isolation from the rest of the system.
+    
+    \begin{itemize}
+        \item \textbf{Who does it?} The developers themselves, usually while writing the code (or before, if using Test-Driven Development - TDD).
+        \item \textbf{Characteristics:} They must be extremely fast (executing in milliseconds), deterministic, and have no external dependencies (no real databases, no real network calls).
+        \item \textbf{Example:} Testing a Python function that calculates the distance between two coordinates.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Testing Level 2: Integration Testing}
+    \textbf{Definition:} Tests how different modules, services, or containers work when connected to one another.
+    
+    \begin{itemize}
+        \item \textbf{The Problem it solves:} Unit tests prove the modules work alone, but they might fail when passing data to each other.
+        \item \textbf{Who does it?} Developers or dedicated Quality Assurance (QA) Automation engineers.
+        \item \textbf{Example:} Does the Python backend correctly establish a connection to the PostgreSQL database container? Can the backend properly parse the JSON response from the external Virtual Robot API?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Testing Levels 3 \& 4: System and Acceptance}
+    \footnotesize
+    \begin{block}{System Testing}
+        Evaluates the complete, fully integrated software product against the system requirements.
+        \begin{itemize}
+            \item This is End-to-End (E2E) testing. 
+            \item \textit{Example:} Using an automated browser tool (like Selenium or Cypress) to click the "Login" button, navigate to the dashboard, and verify the robot status appears on the screen.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Acceptance Testing}
+        Conducted by the client to verify the system satisfies business needs (Validation).
+        \begin{itemize}
+            \item \textbf{Alpha Testing:} Performed by internal staff in a controlled environment.
+            \item \textbf{Beta Testing:} Released to a limited set of external end-users in a real-world, uncontrolled environment to catch edge-case bugs before full launch.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Test Design Techniques}
 %------------------------------------------------------------
 
 \begin{frame}
-    \frametitle{Testing Levels (The V-Model)}
-    Testing is not a single phase; it occurs at multiple levels, mapping directly to how the software was designed.
+    \frametitle{How do we design tests?}
+    \small
+    Writing tests randomly ("Happy Path" testing) is inefficient and leaves massive vulnerabilities. We use structured techniques to ensure maximum coverage with the minimum number of test cases.
     
-    \begin{enumerate}
-        \item \textbf{Unit Testing:} Tests individual components or functions in isolation. Usually written by the developers themselves.
-        \item \textbf{Integration Testing:} Tests how different modules or services work when combined (e.g., Does the Python backend correctly parse JSON from the Robot API?).
-        \item \textbf{System Testing:} Evaluates the complete, fully integrated software product to ensure it meets technical specifications.
-        \item \textbf{Acceptance Testing:} Conducted by the end-users or clients to verify that the system satisfies the business requirements (Does it actually solve the problem?).
-    \end{enumerate}
+    % \vspace{0.3cm}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \begin{block}{Black-Box Testing}
+            \begin{itemize}
+                \item The tester knows \textbf{nothing} about the internal code.
+                \item Focuses purely on Inputs and Outputs.
+                \item Validates functional requirements.
+                \item E.g., User provides a username/password, expects a success message.
+            \end{itemize}
+        \end{block}
+        
+        \column{0.5\textwidth}
+        \begin{block}{White-Box Testing}
+            \begin{itemize}
+                \item The tester has \textbf{full access} to the source code.
+                \item Focuses on internal logic, loops, variables, and conditional branches.
+                \item Verifies structural integrity.
+                \item E.g., Ensuring an \texttt{if/else} statement is fully tested.
+            \end{itemize}
+        \end{block}
+    \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Zooming in: Unit Testing}
-    Unit tests check the smallest testable parts of an application. They should be fast, isolated, and deterministic.
+    \frametitle{Black-Box: Equivalence Partitioning}
+    \textbf{The Problem:} You cannot test every possible input. If an API accepts an integer from 1 to 10,000, writing 10,000 tests takes too much time and processing power.
     
-    \vspace{0.2cm}
-    \textbf{Example (Python using \texttt{pytest}):}
-    \begin{minted}[bgcolor=lightgray, fontsize=\scriptsize]{python}
-# core_logic.py
-def is_valid_coordinate(x, y):
-    if x < 0 or y < 0:
-        return False
-    return True
+    \textbf{The Solution:} Divide inputs into "Equivalence Classes" where the program is expected to behave the exact same way for every value in that class. You only need to test \textit{one} value from each class!
+    
+    \vspace{0.3cm}
+    \textbf{Example:} A robot accepts a speed command from 0 to 100 km/h.
+    \begin{itemize}
+        \item \textbf{Partition 1 (Invalid - Too Low):} $< 0$ (e.g., Test -5)
+        \item \textbf{Partition 2 (Valid):} $0 \le \text{speed} \le 100$ (e.g., Test 45)
+        \item \textbf{Partition 3 (Invalid - Too High):} $> 100$ (e.g., Test 150)
+    \end{itemize}
+    \textit{Instead of 10,000 tests, we mathematically prove the function works using only 3 tests!}
+\end{frame}
 
-# test_core_logic.py
-def test_is_valid_coordinate():
-    # Arrange & Act
-    valid = is_valid_coordinate(5, 10)
-    invalid = is_valid_coordinate(-1, 5)
+\begin{frame}[fragile]
+    \frametitle{Black-Box: Boundary Value Analysis}
+    \textbf{The Reality:} Bugs hide at the boundaries! Programmers frequently use \texttt{<} when they meant \texttt{<=}.
     
-    # Assert
-    assert valid == True
-    assert invalid == False
-    \end{minted}
+    \textbf{The Solution:} Instead of picking a random value in the equivalence partition (like 45), test the exact boundaries, plus and minus one increment.
+    
     \vspace{0.2cm}
-    \footnotesize \textit{If another developer later breaks the \texttt{is\_valid\_coordinate} logic, this test will immediately fail, preventing a bug from reaching production.}
+    \centering
+    \begin{tikzpicture}[
+        scale=1.2,
+        axis/.style={thick, ->, >=stealth},
+        tick/.style={thick}
+    ]
+        % Axis line
+        \draw[axis] (-1,0) -- (7,0);
+        
+        % Invalid Low region
+        \fill[red!20] (-1,-0.2) rectangle (1.5,0.2);
+        \node[font=\scriptsize, text=red!80!black] at (0.25, 0.4) {Invalid (Too Low)};
+        
+        % Valid region
+        \fill[green!20] (1.5,-0.2) rectangle (4.5,0.2);
+        \node[font=\scriptsize, text=green!80!black] at (3, 0.4) {Valid (0 to 100)};
+        
+        % Invalid High region
+        \fill[red!20] (4.5,-0.2) rectangle (7,0.2);
+        \node[font=\scriptsize, text=red!80!black] at (5.75, 0.4) {Invalid (Too High)};
+        
+        % Ticks and Boundary Values
+        \draw[tick] (1.5, 0.1) -- (1.5, -0.1) node[below] {0};
+        \draw[tick] (4.5, 0.1) -- (4.5, -0.1) node[below] {100};
+        
+        % Boundary test points (Arrows)
+        \draw[->, thick, blue] (1.3, -0.6) -- (1.3, -0.2) node[below=0.4cm, font=\tiny] {-1};
+        \draw[->, thick, blue] (1.5, -0.6) -- (1.5, -0.2) node[below=0.4cm, font=\tiny] {0};
+        \draw[->, thick, blue] (1.7, -0.6) -- (1.7, -0.2) node[below=0.4cm, font=\tiny] {1};
+        
+        \draw[->, thick, blue] (4.3, -0.6) -- (4.3, -0.2) node[below=0.4cm, font=\tiny] {99};
+        \draw[->, thick, blue] (4.5, -0.6) -- (4.5, -0.2) node[below=0.4cm, font=\tiny] {100};
+        \draw[->, thick, blue] (4.7, -0.6) -- (4.7, -0.2) node[below=0.4cm, font=\tiny] {101};
+    \end{tikzpicture}
+    
+    \vspace{0.2cm}
+    \textit{For the speed variable (0 to 100), the absolute most critical test values are: -1, 0, 1, 99, 100, 101.}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{White-Box: Code Coverage}
+    \footnotesize
+    If you can see the code, you must ensure your tests actually execute every part of it. We measure this using \textbf{Coverage Metrics}.
+    
+    \begin{minted}[bgcolor=lightgray, fontsize=\scriptsize]{python}
+    def check_permissions(user_role):
+        if user_role == "Commander":
+            return True
+        else:
+            return False
+    \end{minted}
+
+    \begin{itemize}
+        \item \textbf{Statement Coverage:} Does the test suite execute every single line of code at least once?
+        \item \textbf{Branch/Decision Coverage:} Do your tests force the program to travel down \textit{both} the True path and the False path of every \texttt{if} statement?
+        \item \textbf{Path Coverage:} Does the test suite execute every possible combination of paths through the program? (Extremely thorough, but computationally expensive for large systems).
+    \end{itemize}
+    % \footnotesize
+    \textit{Industry standard typically mandates at least 80\% Statement and Branch coverage for production software.}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Writing Tests \& Mocking}
+%------------------------------------------------------------
+
+\begin{frame}[fragile]
+    \frametitle{Anatomy of a Unit Test (The AAA Pattern)}
+    Good unit tests are highly structured and easy to read. We follow the \textbf{Arrange, Act, Assert (AAA)} pattern.
+    
+    \begin{minted}[bgcolor=lightgray, fontsize=\scriptsize]{python}
+# The logic (main.py)
+def calculate_battery_drain(distance, payload_weight):
+    return (distance * 0.5) + (payload_weight * 0.2)
+
+# The test using pytest (test_main.py)
+def test_calculate_battery_drain():
+    # 1. ARRANGE: Set up the inputs and expected outputs
+    distance = 10
+    payload = 5
+    expected_drain = 6.0
+    
+    # 2. ACT: Call the actual function
+    actual_drain = calculate_battery_drain(distance, payload)
+    
+    # 3. ASSERT: Verify the result matches expectations
+    assert actual_drain == expected_drain
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Problem: External Dependencies}
+    What happens if the function we want to test talks to a Database or an external Robot API?
+    
+    \begin{minted}[bgcolor=lightgray, fontsize=\scriptsize]{python}
+import requests
+
+def move_physical_robot(x, y):
+    # This makes a REAL network request to hardware!
+    response = requests.post("http://robot-api:5000/move", json={"x":x, "y":y})
+    return response.status_code == 200
+    \end{minted}
+    
+    \vspace{0.2cm}
+    \textbf{Why is this fatal for Unit Testing?}
+    \begin{itemize}
+        \item It makes the test \textbf{slow} (network latency).
+        \item It makes the test \textbf{flaky} (if the robot API is down, your backend test fails, even though your backend code is perfectly fine!).
+        \item \textbf{It has physical consequences:} You don't want an automated test moving a real robot 100 times a day in the lab!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Solution: Mocking \& Stubbing}
+    \footnotesize
+    We use \textbf{Mocks} (or Test Doubles) to intercept the external call and return a fake, predictable response instantly.
+    
+    \begin{minted}[bgcolor=lightgray, fontsize=\scriptsize]{python}
+from unittest.mock import patch
+import my_robot_module
+
+# We use the @patch decorator to intercept the 'requests.post' function
+@patch('my_robot_module.requests.post')
+def test_move_physical_robot(mock_post):
+    # Arrange: Tell the mock to pretend it returned a 200 OK
+    mock_post.return_value.status_code = 200
+    # Act: Call our function (it will hit the mock, NOT the real internet!)
+    result = my_robot_module.move_physical_robot(50, 50)
+    # Assert: Verify our code processed the fake data correctly
+    assert result == True
+    # We can also assert the mock was called with the right data!
+    mock_post.assert_called_with("http://robot-api:5000/move", 
+            json={"x":50, "y":50})
+    \end{minted}
+    % \vspace{0.1cm}
+    \textit{Mocking is absolutely essential for testing modern Microservices and Containerised environments!}
 \end{frame}
 
 %------------------------------------------------------------
@@ -200,36 +503,23 @@ def test_is_valid_coordinate():
 
 \begin{frame}
     \frametitle{Testing Types: Functional vs. Non-Functional}
-    We divide testing into \textit{what} the system does versus \textit{how well} it does it.
-    
+    \footnotesize    
     \begin{block}{Functional Testing}
-        Validates the software against functional requirements. 
+        Validates the software against functional requirements. "Does it do what it is supposed to do?"
         \begin{itemize}
-            \item \textbf{Examples:} Can the user log in? Does the "Emergency Stop" button halt the robot? Does the database save the audit log?
-        \item \textbf{Smoke Testing:} A subset of functional tests to check if the crucial functions work before doing a deeper test pass.
+            \item \textbf{Smoke Testing:} A shallow, rapid test of crucial functions to see if the build is totally broken before spending time on deep testing.
+            \item \textbf{Regression Testing:} Re-running old tests to ensure a new feature didn't break an old feature. (Automated tests make this painless).
         \end{itemize}
     \end{block}
     
     \begin{block}{Non-Functional Testing}
-        Evaluates the operational aspects of the system.
+        Evaluates the operational characteristics. "How well does it do it?"
         \begin{itemize}
-            \item \textbf{Performance Testing:} How does the backend handle 1,000 simultaneous robot status requests?
-            \item \textbf{Security Testing:} Can a user bypass the RBAC controls?
+            \item \textbf{Load/Performance Testing:} Pushing thousands of simulated users to see when the server crashes.
+            \item \textbf{Security Testing:} Penetration testing, checking for SQL injections.
             \item \textbf{Usability Testing:} HCI checks (as discussed in Week 6).
         \end{itemize}
     \end{block}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Regression Testing}
-    \textbf{Definition:} Re-running functional and non-functional tests to ensure that previously developed and tested software still performs after a change.
-    
-    \vspace{0.3cm}
-    \begin{itemize}
-        \item As your codebase grows, adding a new feature often accidentally breaks an old one (a "regression").
-        \item Manual regression testing is incredibly tedious and error-prone.
-        \item \textbf{Solution:} Automated test suites. Every time you commit code to GitHub, the automated runner executes the entire regression suite in seconds.
-    \end{itemize}
 \end{frame}
 
 %------------------------------------------------------------
@@ -238,9 +528,9 @@ def test_is_valid_coordinate():
 
 \begin{frame}
     \frametitle{The Test Automation Pyramid}
-    How should we distribute our automated testing efforts?
+    Writing tests takes time. How should we distribute our automation efforts to maximize coverage while minimizing execution time?
     
-    \vspace{0.2cm}
+    % \vspace{0.2cm}
     \centering
     \begin{tikzpicture}
         % Pyramid base (Unit)
@@ -256,30 +546,42 @@ def test_is_valid_coordinate():
         \node[font=\scriptsize, align=center] at (0,2.35) {\textbf{UI / E2E}\\(Slow, Brittle)};
     \end{tikzpicture}
     
-    \vspace{0.2cm}
+    % \vspace{0.2cm}
     \begin{itemize}
-        \item Write \textbf{lots} of Unit tests (they execute in milliseconds).
-        \item Write \textbf{some} Integration tests (they require databases/containers to spin up).
-        \item Write \textbf{few} End-to-End UI tests (they require simulating a real browser, which is slow and prone to breaking on minor visual changes).
+        \item Write \textbf{hundreds} of Unit tests (they execute in milliseconds).
+        \item Write \textbf{dozens} of Integration tests (they require databases/containers to spin up).
+        \item Write \textbf{very few} End-to-End UI tests (using tools like Selenium/Cypress). They are incredibly slow and break whenever a button changes color.
     \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Bringing it all together: CI / CD}
-    \textbf{Continuous Integration (CI):} The practice of frequently merging code changes into a central repository, where automated builds and tests are run.
+    \frametitle{Continuous Integration (CI)}
+    \textbf{The Problem:} Developers write tests locally, but forget to run them before merging code, resulting in a broken \texttt{main} branch that affects the whole team.
     
-    \textbf{Continuous Deployment (CD):} Automating the release of validated code to a production environment.
+    \textbf{The Solution: Continuous Integration (CI).}
+    \begin{itemize}
+        \item CI is the practice of automating the integration of code changes from multiple contributors into a single software project.
+        \item Every time code is pushed (e.g., via a Pull Request on GitHub), a remote cloud server automatically pulls the code, builds the Docker containers, and runs the entire test suite.
+        \item If a single test fails, the CI pipeline turns \textcolor{red}{\textbf{RED}} and the code is blocked from being merged.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Continuous Delivery vs. Continuous Deployment (CD)}
+    If CI ensures the code is safe, \textbf{CD} ensures the code gets to the user efficiently.
     
     \vspace{0.3cm}
-    \textbf{How it works in your project (GitHub Actions):}
+    \textbf{The complete CI/CD Pipeline:}
     \begin{enumerate}
-        \item You push code to GitHub.
-        \item GitHub spins up an isolated server.
-        \item It builds your \textbf{Docker Containers} (what you learned last week!).
-        \item It runs your \textbf{Automated Test Suite} (what you learned today!).
-        \item If tests pass, it merges the code. If tests fail, it blocks the merge.
+        \item \textbf{Code \& Push:} Developer pushes to GitHub.
+        \item \textbf{Build (CI):} Server builds the Docker Image.
+        \item \textbf{Test (CI):} Server runs Unit and Integration tests.
+        \item \textbf{Release (Continuous Delivery):} Docker image is pushed to an artifact Registry (like DockerHub or GitHub Container Registry) and waits for human approval to go live.
+        \item \textbf{Deploy (Continuous Deployment):} Completely automated. The production server pulls the new image and swaps it with the old one without human intervention.
     \end{enumerate}
+    \textit{Companies like Amazon and Netflix deploy thousands of times a day using this exact architecture!}
 \end{frame}
+
 
 %------------------------------------------------------------
 \section{Next Steps}
@@ -287,12 +589,12 @@ def test_is_valid_coordinate():
 
 \begin{frame}
     \frametitle{This Week's Lab: Writing Tests \& CI}
-    In the workshop, you will implement automated testing for your Assessment 1 Robot Management System.
+    In the workshop, you will move from theory to practice by implementing automated testing for your Assessment 1 Robot Management System.
     
     \begin{itemize}
-        \item \textbf{Task 1: Unit Testing:} Write isolated tests for your backend logic (e.g., verifying RBAC permissions or coordinate math).
-        \item \textbf{Task 2: API Testing:} Write tests to verify your backend routes return the correct JSON HTTP status codes.
-        \item \textbf{Task 3: GitHub Actions CI:} Create a YAML pipeline to automatically run your tests every time you push to your repository.
+        \item \textbf{Task 1: Unit Testing:} Write isolated tests for your backend logic using Boundary Value Analysis.
+        \item \textbf{Task 2: API Integration Testing:} Write tests to verify your backend routes return the correct HTTP status codes when handling authorization logic.
+        \item \textbf{Task 3: GitHub Actions CI:} Create a YAML pipeline to automatically build your Docker containers and run your tests every time you push to your repository.
     \end{itemize}
 \end{frame}
 
@@ -301,9 +603,9 @@ def test_is_valid_coordinate():
     \begin{itemize}
         \item \textbf{Recommended Reading:} 
         Sommerville, \textit{Software Engineering 9th Edition}, Chapters 8 (Testing) and 25 (Configuration Management).
-        \item \textbf{PyTest Documentation:} Excellent starting point if you are writing a Python backend.
-        \item \textbf{Jest Documentation:} The industry standard if you are writing a Node.js/JavaScript backend.
-        \item \textbf{GitHub Actions Docs:} Review the syntax for creating CI workflows.
+        \item \textbf{Software Testing, 2nd Edition:} Ron Patton (Sams Publishing).
+        \item \textbf{PyTest / Jest Documentation:} Industry standards for writing tests in Python and JavaScript.
+        \item \textbf{GitHub Actions Docs:} Review the syntax for creating your own CI/CD \texttt{.yml} workflows.
     \end{itemize}
 \end{frame}
 
