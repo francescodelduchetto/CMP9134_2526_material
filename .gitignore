@@ -12,7 +12,7 @@
 *.xdv
 
 # Minted package generated directories
-_minted-*
+_minted*
 
 # PDF files (optional, uncomment if you want to ignore generated PDFs)
 # *.pdf
@@ -25,3 +25,4 @@ _minted-*
 .vscode/
 
 *.DS_Store
+
