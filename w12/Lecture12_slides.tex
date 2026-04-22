@@ -40,7 +40,7 @@
 \usepackage{tgheros}
 \usepackage{hyperref}
 \usepackage{tikz}
-\usetikzlibrary{shapes, arrows, arrows.meta, positioning, shadows, fit, calc, backgrounds}
+\usetikzlibrary{shapes, arrows, arrows.meta, positioning, shadows, fit, calc, backgrounds, decorations.pathreplacing}
 
 \renewcommand*\familydefault{\sfdefault}
 
@@ -76,8 +76,10 @@
     \tableofcontents
 \end{frame}
 
+
+
 %------------------------------------------------------------
-\section{Recap \& Introduction}
+\section{Formalizing DevOps \& Introduction}
 %------------------------------------------------------------
 
 \begin{frame}
@@ -87,15 +89,110 @@
     \begin{itemize}
         \item \textbf{Weeks 1-3:} Agile Planning, Requirements, and UML Models.
         \item \textbf{Weeks 4-6:} System Architecture, Design Patterns, and HCI.
-        \item \textbf{Weeks 7-9:} Containerisation (Docker) and Automated CI/CD Pipelines.
+        \item \textbf{Weeks 7-9:} Containerisation (Docker) and Automated Testing.
     \end{itemize}
     
     \vspace{0.3cm}
-    You have built your Ground Control Station. Your tests are passing. Your containers are running. Is the Software Engineering process over?
+    You have built your Ground Control Station. Your tests are passing. Your containers are running. Before we look at what happens \textit{next}, we need to formally name the methodology you have been using for the past month: \textbf{DevOps}.
+\end{frame}
+
+\begin{frame}
+    \frametitle{The Traditional "Wall of Conflict"}
+    Historically, software companies had two entirely separate teams with conflicting goals:
+    
+    \vspace{0.3cm}
+    \begin{columns}
+        \column{0.45\textwidth}
+        \begin{block}{Development (Dev)}
+            \textbf{Goal:} Change \& Agility.\\
+            \textit{"We want to ship new features to users as fast as possible!"}
+        \end{block}
+        
+        \column{0.1\textwidth}
+        \centering
+        \textbf{VS}
+        
+        \column{0.45\textwidth}
+        \begin{alertblock}{Operations (Ops)}
+            \textbf{Goal:} Stability \& Uptime.\\
+            \textit{"Every time you give us new code, the servers crash. Stop changing things!"}
+        \end{alertblock}
+    \end{columns}
+    
+    \vspace{0.4cm}
+    \textbf{The Result:} Developers would write code, throw it over the "Wall of Conflict" to Operations, and wash their hands of it. Deployments took months and frequently failed.
+\end{frame}
+
+\begin{frame}
+    \frametitle{What is DevOps?}
+    \small
+    \begin{block}{Definition}
+        DevOps is the combination of cultural philosophies, practices, and tools that increases an organization's ability to deliver applications at high velocity. Focus: \textbf{Collaboration} between Dev and Ops, and \textbf{Automation} of the software delivery process.
+    \end{block}
+    
+    \vspace{0.3cm}
+    It removes the wall. The engineers who write the code are also responsible for deploying and maintaining the code.
     
     \vspace{0.2cm}
-    \textbf{No. In fact, it is just beginning.}
+    \textbf{How you already applied this:}
+    \begin{itemize}
+        \item You acted as \textbf{Devs} when you wrote your FastAPI/Node.js endpoints.
+        \item You acted as \textbf{Ops} when you wrote your \texttt{Dockerfile} and \texttt{docker-compose.yml} to define the server infrastructure as code!
+    \end{itemize}
 \end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formalizing CI / CD}
+    The primary engine of DevOps is the CI/CD Pipeline. You built the first half of this in Week 8 using GitHub Actions.
+    
+    \vspace{0.2cm}
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \begin{tikzpicture}[
+        node distance=0.5cm and 0.5cm,
+        box/.style={rectangle, draw=blue!80, fill=blue!10, thick, minimum width=2.2cm, minimum height=1cm, align=center, font=\scriptsize\bfseries},
+        arrow/.style={->, >=stealth, thick, gray}
+    ]
+        % Nodes
+        \node[box] (code) at (0,0) {Code \&\\Commit};
+        \node[box] (build) at (2.8,0) {Build\\(Docker)};
+        \node[box] (test) at (5.6,0) {Automated\\Testing};
+        \node[box, fill=orange!10, draw=orange!80] (deliver) at (8.4,0) {Deliver to\\Registry};
+        \node[box, fill=green!10, draw=green!80] (deploy) at (11.2,0) {Deploy to\\Production};
+        
+        % Arrows
+        \draw[arrow] (code) -- (build);
+        \draw[arrow] (build) -- (test);
+        \draw[arrow] (test) -- (deliver);
+        \draw[arrow] (deliver) -- (deploy);
+        
+        % Groupings
+        \draw[decorate, decoration={brace, amplitude=10pt, mirror}, thick, blue] (-1.2, -0.7) -- (6.8, -0.7) node[midway, below=12pt, font=\small\bfseries] {Continuous Integration (CI)};
+        
+        \draw[decorate, decoration={brace, amplitude=10pt, mirror}, thick, orange] (7.2, -0.7) -- (12.4, -0.7) node[midway, below=12pt, font=\small\bfseries] {Continuous Deployment (CD)};
+    \end{tikzpicture}
+    }
+    
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{CI (Continuous Integration):} Automatically merging, building, and testing code to ensure the `main` branch is never broken.
+        \item \textbf{CD (Continuous Deployment):} Automatically releasing that tested code directly to the live servers without human intervention.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{The Consequence of High Velocity}
+    By using DevOps and CI/CD, companies like Netflix and Amazon can deploy new code to production thousands of times a day.
+    
+    \vspace{0.4cm}
+    \begin{alertblock}{The New Problem}
+        If you can write, merge, and ship code instantly, the codebase grows and changes at an unprecedented rate. How do you prevent it from turning into a chaotic, unmaintainable mess?
+    \end{alertblock}
+    
+    \vspace{0.4cm}
+    This brings us to the core topic of today's lecture: \textbf{Software Evolution and Technical Debt.}
+\end{frame}
+
 
 \begin{frame}
     \frametitle{Today's Learning Objectives}
@@ -114,14 +211,15 @@
 
 \begin{frame}
     \frametitle{The Reality of Software}
+    \small
     Software is not a physical bridge. When a bridge is built, it remains static until it decays. Software, however, is a living entity.
     
-    \vspace{0.3cm}
+    \vspace{0.2cm}
     \begin{block}{Software Evolution}
         The process of developing, maintaining, and updating software \textit{after} its initial release to accommodate changing user requirements, hardware updates, or business goals.
     \end{block}
     
-    \vspace{0.3cm}
+    \vspace{0.2cm}
     \textbf{Why does software evolve?}
     \begin{itemize}
         \item The business environment changes (e.g., new robotics regulations).
@@ -177,21 +275,21 @@
     \centering
     \resizebox{0.8\textwidth}{!}{
     \begin{tikzpicture}[
-        quadrant/.style={rectangle, text=white, font=\sffamily\bfseries, align=center, minimum width=4cm, minimum height=3cm},
-        axis/.style={thick, -stealth}
+        quadrant/.style={rectangle, text=white, font=\sffamily\bfseries, align=center, minimum width=5cm, minimum height=3cm},
+        axis/.style={line width=2pt, -stealth}
     ]
         % Quadrants
-        \node[quadrant, fill=red!70!black] (reckless_deliberate) at (-2, 1.5) {Reckless \&\\Deliberate\\ \vspace{0.2cm}\\ \scriptsize "We don't have time\\ \scriptsize for design/tests, just ship it."};
-        \node[quadrant, fill=orange!90!black] (prudent_deliberate) at (2, 1.5) {Prudent \&\\Deliberate\\ \vspace{0.2cm}\\ \scriptsize "We must ship now\\ \scriptsize and accept the consequences."};
-        \node[quadrant, fill=purple!70!black] (reckless_inadvertent) at (-2, -1.5) {Reckless \&\\Inadvertent\\ \vspace{0.2cm}\\ \scriptsize "What is a Design Pattern?"};
-        \node[quadrant, fill=blue!70!black] (prudent_inadvertent) at (2, -1.5) {Prudent \&\\Inadvertent\\ \vspace{0.2cm}\\ \scriptsize "Now we know how we\\ \scriptsize should have built it."};
+        \node[quadrant, fill=red!70!black] (reckless_deliberate) at (-2.5, 1.5) {Reckless \&\\Deliberate\\ \vspace{0.2cm}\\ \scriptsize "We don't have time\\ \scriptsize for design/tests, just ship it."};
+        \node[quadrant, fill=orange!90!black] (prudent_deliberate) at (2.5, 1.5) {Prudent \&\\Deliberate\\ \vspace{0.2cm}\\ \scriptsize "We must ship now\\ \scriptsize and accept the consequences."};
+        \node[quadrant, fill=purple!70!black] (reckless_inadvertent) at (-2.5, -1.5) {Reckless \&\\Inadvertent\\ \vspace{0.2cm}\\ \scriptsize "What is a Design Pattern?"};
+        \node[quadrant, fill=blue!70!black] (prudent_inadvertent) at (2.5, -1.5) {Prudent \&\\Inadvertent\\ \vspace{0.2cm}\\ \scriptsize "Now we know how we\\ \scriptsize should have built it."};
         
         % Axes
-        \draw[axis] (-4, 0) -- (4, 0) node[right, font=\bfseries] {Prudent};
-        \node[left, font=\bfseries] at (-4, 0) {Reckless};
+        \draw[axis] (-5.3, 0) -- (5.3, 0) node[right, font=\bfseries] {Prudent};
+        \node[left, font=\bfseries] at (-5.3, 0) {Reckless};
         
-        \draw[axis] (0, -3) -- (0, 3) node[above, font=\bfseries] {Deliberate};
-        \node[below, font=\bfseries] at (0, -3) {Inadvertent};
+        \draw[axis] (0, -3.3) -- (0, 3.3) node[above, font=\bfseries] {Deliberate};
+        \node[below, font=\bfseries] at (0, -3.3) {Inadvertent};
     \end{tikzpicture}
     }
 \end{frame}
@@ -243,6 +341,7 @@
 
 \begin{frame}[fragile]
     \frametitle{Interactive Task: Spot the Smells}
+    \small
     Take 60 seconds. Read the code below. How many distinct "Code Smells" can you find?
     
     \begin{minted}[bgcolor=lightgray, fontsize=\scriptsize]{python}
@@ -262,8 +361,8 @@ def do_stuff(x):
     \vspace{0.2cm}
     \textbf{The Smells:}
     \begin{itemize}
-        \item \textbf{Magic Numbers:} What do \texttt{1} and \texttt{2} mean? (Should be named constants).
-        \item \textbf{Duplicated Code:} The DB connection and update logic is copy-pasted.
+        \item \textbf{Magic Numbers:} What do \texttt{1} and \texttt{2} mean?
+        \item \textbf{Duplicated Code:} DB connection and update logic is copy-pasted.
         \item \textbf{Long Method / God Class:} Doing DB updates AND battery calculations in one function called \texttt{do\_stuff}.
     \end{itemize}
 \end{frame}
@@ -283,7 +382,7 @@ def do_stuff(x):
     
     \vspace{0.3cm}
     \textbf{The Golden Rule of Refactoring:}
-    You cannot refactor code if you do not have an automated test suite (Week 8)! If you change the internal structure without tests, you are not refactoring; you are just blindly hoping you didn't break anything.
+    You cannot safely refactor code if you do not have an automated test suite (Week 8)! If you change the internal structure without tests, you are just blindly hoping you didn't break anything.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -388,7 +487,7 @@ def save_telemetry_to_db(percentage):
     \begin{itemize}
         \item \textbf{Recommended Reading:} 
         Sommerville, \textit{Software Engineering 9th Edition}, Chapter 9 (Software Evolution).
-        \item \textbf{Refactoring: Improving the Design of Existing Code} by Martin Fowler (The definitive guide to Code Smells and Refactoring techniques).
+        \item \textbf{Refactoring: Improving the Design of Existing Code} by Martin Fowler (The definitive guide to Code Smells and Refactoring techniques). \url{https://github.com/pratik0197/books/blob/master/software-dev/Refactoring\%20\%20Improving\%20the\%20Design\%20of\%20Existing\%20Code.pdf}
         \item \textbf{Refactoring.Guru:} An excellent, visual website detailing dozens of specific code smells and how to fix them.
     \end{itemize}
 \end{frame}
