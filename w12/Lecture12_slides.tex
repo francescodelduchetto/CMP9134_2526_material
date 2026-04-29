@@ -11,7 +11,7 @@
         \usebeamerfont{section in head/foot}
         \hspace{0.5cm}
         \ifnum\insertframenumber<30
-            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 510293}}
+            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 273110}}
         \fi
         \hspace{0.5cm}
     \end{beamercolorbox}
@@ -56,7 +56,7 @@
 %------------------------------------------------------------
 % Title Page Information
 %------------------------------------------------------------
-\title[CMP9134 - Week 12]{Software Evolution \& Technical Debt}
+\title[CMP9134 - Week 12]{Software Evolution \& Refactoring}
 \subtitle{CMP9134: Software Engineering}
 \author[Francesco Del Duchetto]{Dr Francesco Del Duchetto\\Lecturer in Robotics and Autonomous Systems}
 \institute[University of Lincoln]{University of Lincoln}
@@ -105,7 +105,7 @@
         \column{0.45\textwidth}
         \begin{block}{Development (Dev)}
             \textbf{Goal:} Change \& Agility.\\
-            \textit{"We want to ship new features to users as fast as possible!"}
+            \textit{"We want to ship new features to users as fast as possible"}
         \end{block}
         
         \column{0.1\textwidth}
@@ -115,7 +115,7 @@
         \column{0.45\textwidth}
         \begin{alertblock}{Operations (Ops)}
             \textbf{Goal:} Stability \& Uptime.\\
-            \textit{"Every time you give us new code, the servers crash. Stop changing things!"}
+            \textit{"Every time you give us new code, the servers crash. Stop changing things"}
         \end{alertblock}
     \end{columns}
     
@@ -245,6 +245,31 @@
     The quality of a system will appear to decline over time unless it is rigorously maintained and adapted to changes in its operational environment.
 \end{frame}
 
+\begin{frame}
+    \frametitle{Technical Debt and Refactoring}
+    \centering
+    \begin{tikzpicture}[>=stealth, font=\small]
+        % Axes
+        \draw[line width=1.5pt, ->] (0,0) -- (9.5,0) node[below left] {Time};
+        \draw[line width=1.5pt, ->] (0,0) -- (0,5.5) node[left, align=center] {Technical\\Cost};
+
+        % Break-even dashed line
+        \draw[dashed, thick] (0,3.5) -- (9.5,3.5) node[right, align=left, font=\scriptsize] {};
+        \node[align=left, font=\scriptsize] at (3.5,3.85) {Break even point for cost};
+
+        % Technical Debt rising line
+        \draw[thick, ->] (0.3,0.3) -- (7.2,5.2);
+        \node[rotate=35, font=\scriptsize] at (3.2,2.2) {Technical Debt};
+
+        % Refactoring drop line
+        \draw[thick, ->] (7.2,5.2) -- (9.2,1.0);
+
+        % Blue refactoring arrow
+        \draw[blue, line width=2pt, ->] (6.2,0.5) -- (7.0,4.8);
+        \node[blue, font=\bfseries\normalsize] at (5.5,0.2) {refactoring};
+    \end{tikzpicture}
+\end{frame}
+
 %------------------------------------------------------------
 \section{Technical Debt}
 %------------------------------------------------------------
@@ -299,7 +324,7 @@
     \textbf{Scenario:} 
     Your team is building the Ground Control Station. The deadline is tomorrow. You realize your database queries are unoptimized and might slow down if 1,000 robots connect. 
     
-    You decide to ship the code as-is to meet the deadline, but you immediately create a Jira ticket to rewrite the queries next sprint.
+    You decide to ship the code as-is to meet the deadline, but you immediately create a GitHub issue to rewrite the queries next sprint.
     
     \vspace{0.3cm}
     \textbf{Question:} Which quadrant of Technical Debt is this?
@@ -331,12 +356,53 @@
 \begin{frame}
     \frametitle{Common Code Smells}
     \begin{itemize}
-        \item \textbf{The God Class:} A single class that controls too much, has too many dependencies, and thousands of lines of code. It violates the Single Responsibility Principle.
-        \item \textbf{Long Method:} A function that spans multiple screens. It is doing too many things, making it impossible to unit test effectively.
-        \item \textbf{Duplicated Code (Copy-Paste Programming):} The same logic exists in three different places. If a bug is found, you have to remember to fix it in all three places.
-        \item \textbf{Shotgun Surgery:} Every time you want to make a simple change (e.g., adding a new robot sensor), you have to make tiny edits to 15 different files.
-        \item \textbf{Magic Numbers:} Hardcoded numbers scattered through the code (e.g., \texttt{if (status == 4)} instead of \texttt{if (status == ROBOT\_IDLE)}).
+        \item \textbf{The God Class / Long Method:} A function or class that handles parsing, business logic, and database connections all at once. Violates the Single Responsibility Principle.
+        \item \textbf{Duplicated Code:} The same logic exists in multiple places. If a bug is found, you have to remember to fix it everywhere.
+        \item \textbf{Magic Numbers:} Hardcoded, unexplained numbers (e.g., \texttt{if (type == 1)} instead of \texttt{if (type == TYPE\_RECON)}).
+        \item \textbf{High Cyclomatic Complexity ("Arrow Code"):} Deeply nested \texttt{if/else} statements that push your code far to the right of the screen. Impossible to read and test.
+        \item \textbf{Security Smells:} Using string concatenation for database queries (SQL Injection) instead of parameterized queries.
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Common Code Smells}
+    \begin{itemize}
+        % \item \textbf{The God Class:} A single class that controls too much, has too many dependencies, and thousands of lines of code. It violates the Single Responsibility Principle.
+        \item \textbf{Long Method:} A function that spans multiple screens. It is doing too many things, making it impossible to unit test effectively.
+        % \item \textbf{Duplicated Code (Copy-Paste Programming):} The same logic exists in three different places. If a bug is found, you have to remember to fix it in all three places.
+        \item \textbf{Shotgun Surgery:} Every time you want to make a simple change (e.g., adding a new robot sensor), you have to make tiny edits to 15 different files.
+        % \item \textbf{Magic Numbers:} Hardcoded numbers scattered through the code (e.g., \texttt{if (status == 4)} instead of \texttt{if (status == ROBOT\_IDLE)}).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Which Smells Should You Fix First?}
+    Not all smells are equally urgent. Prioritize by \textbf{Impact} and \textbf{Effort}.
+
+    \vspace{0.3cm}
+    \centering
+    \resizebox{0.82\textwidth}{!}{
+    \begin{tikzpicture}[>=stealth, font=\small]
+        % Axes
+        \draw[->, thick] (0,0) -- (6,0) node[below] {Refactoring Effort};
+        \draw[->, thick] (0,0) -- (0,4.5) node[left, align=center] {Risk /\\Maintenance Impact};
+
+        % Quadrants
+        \draw[dashed] (3,0) -- (3,4.2);
+        \draw[dashed] (0,2.1) -- (5.8,2.1);
+
+        \node[align=center, text=green!50!black] at (1.5,3.3) {Quick wins\\(do now)};
+        \node[align=center, text=orange!80!black] at (4.4,3.3) {High value,\\plan carefully};
+        \node[align=center, text=gray!70!black] at (1.5,0.9) {Low impact,\\optional};
+        \node[align=center, text=red!70!black] at (4.4,0.9) {Avoid for now\\(low ROI)};
+
+        % Example points
+        \fill[blue!80] (1.2,3.6) circle (2pt) node[above right, align=left, font=\scriptsize] {Rename unclear\\variables};
+        \fill[blue!80] (2.2,2.9) circle (2pt) node[right, align=left, font=\scriptsize] {Extract long\\method};
+        \fill[blue!80] (4.6,3.5) circle (2pt) node[right, align=left, font=\scriptsize] {Break apart\\god class};
+        \fill[blue!80] (4.9,1.1) circle (2pt) node[right, align=left, font=\scriptsize] {Rewrite entire\\module};
+    \end{tikzpicture}
+    }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -367,6 +433,26 @@ def do_stuff(x):
     \end{itemize}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Smell $\rightarrow$ Refactoring Technique}
+    \small
+    \begin{center}
+    \rowcolors{2}{blue!5}{white}
+    \begin{tabular}{p{0.33\textwidth} p{0.30\textwidth} p{0.30\textwidth}}
+        \rowcolor{blue!20}
+        \textbf{Code Smell} & \textbf{Typical Refactoring} & \textbf{Expected Benefit} \\
+        Long Method & Extract Method & Readability + testability \\
+        Duplicated Code & Pull Up Method / Helper Function & Single source of truth \\
+        God Class & Extract Class & Better modularity \\
+        Shotgun Surgery & Move Method / Introduce Facade & Localized future changes \\
+        Magic Numbers & Replace Magic Number with Symbolic Constant & Better intent and fewer mistakes \\
+    \end{tabular}
+    \end{center}
+
+    \vspace{0.2cm}
+    \textbf{Key idea:} Refactoring is not random cleanup; each smell has a targeted technique.
+\end{frame}
+
 %------------------------------------------------------------
 \section{Refactoring}
 %------------------------------------------------------------
@@ -383,6 +469,130 @@ def do_stuff(x):
     \vspace{0.3cm}
     \textbf{The Golden Rule of Refactoring:}
     You cannot safely refactor code if you do not have an automated test suite (Week 8)! If you change the internal structure without tests, you are just blindly hoping you didn't break anything.
+\end{frame}
+
+\begin{frame}
+    \frametitle{A Safe Refactoring Workflow (CI/CD-Aligned)}
+    \begin{enumerate}
+        \item \textbf{Pin behavior first:} Add or update tests around the area you will change.
+        \item \textbf{Make one small refactor:} e.g., extract one method, rename one symbol.
+        \item \textbf{Run tests immediately:} Local tests + CI pipeline must stay green.
+        \item \textbf{Commit in tiny steps:} Small commits make rollbacks and reviews easier.
+        \item \textbf{Repeat:} Continuous improvement beats "big bang" rewrites.
+    \end{enumerate}
+
+    \vspace{0.3cm}
+    \begin{alertblock}{Rule}
+        \textbf{Red tests = stop refactoring.} Fix behavior first, then continue cleanup.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Refactor or Rewrite?}
+    \textit{"When should we just rewrite this from scratch?"}
+
+    \vspace{0.1cm}
+    \begin{columns}[T]
+        \column{0.48\textwidth}
+        \begin{block}{Prefer Refactor When...}
+            \begin{itemize}
+                \item Behavior is mostly correct.
+                \item Tests exist (or can be added quickly).
+                \item Problems are localized to known hotspots.
+                \item You can improve in small safe steps.
+            \end{itemize}
+        \end{block}
+
+        \column{0.48\textwidth}
+        \begin{alertblock}{Consider Rewrite When...}
+            \begin{itemize}
+                \item Core architecture blocks key requirements.
+                \item The system is untestable and tightly coupled.
+                \item Maintenance cost exceeds replacement cost.
+                \item Scope is tightly controlled and phased.
+            \end{itemize}
+        \end{alertblock}
+    \end{columns}
+
+    \vspace{0.1cm}
+    \textbf{Rule of thumb:} If you cannot define safe, incremental steps, a rewrite is high risk.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Technical Debt Register (Team Practice)}
+    \small
+    Keep debt visible. Track it like any other engineering work item in Trello/GitHub.
+    \footnotesize
+    \vspace{0.2cm}
+    \begin{center}
+    \rowcolors{2}{gray!10}{white}
+    \begin{tabular}{p{0.16\textwidth} p{0.15\textwidth} p{0.22\textwidth} p{0.1\textwidth} p{0.16\textwidth} p{0.12\textwidth}}
+        \rowcolor{blue!20}
+        \textbf{Debt Item} & \textbf{Location} & \textbf{Interest Paid} & \textbf{Owner} & \textbf{Payoff Sprint} & \textbf{Risk} \\
+        Duplicate validation & API service & Bugs fixed in 5 files & Team A & Sprint 7 & Medium \\
+        God class controller & Backend core & Slow onboarding + merge conflicts & Team B & Sprint 8 & High \\
+        Hardcoded config values & Frontend config & Manual edits per deploy & Team C & Sprint 7 & Low \\
+    \end{tabular}
+    \end{center}
+
+    \vspace{0.2cm}
+    \textbf{Outcome:} debt becomes planned work, not forgotten work.
+\end{frame}
+
+\begin{frame}
+    \frametitle{How Do We Prove Refactoring Helped?}
+    Refactoring should show measurable improvement, not just "cleaner-looking" code.
+
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Cyclomatic complexity:} Is decision complexity lower in changed modules?
+        \item \textbf{Duplicated lines:} Did repeated logic decrease?
+        \item \textbf{Test coverage (touched area):} Did confidence increase where code changed?
+        \item \textbf{PR review/merge time:} Are changes easier to review and integrate?
+    \end{itemize}
+
+    \vspace{0.3cm}
+    \begin{block}{Engineering mindset}
+        Refactoring is an \textbf{investment}. We justify it with reduced delivery risk and lower future cost.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{5-Minute Activity: Debt Triage}
+    \small
+    In pairs, rank each item by: \textbf{Severity}, \textbf{Interest Cost}, and \textbf{First Refactoring Step}.
+
+    \vspace{0.2cm}
+    \begin{enumerate}
+        \item 400-line function handling auth + DB + API calls.
+        \item Same SQL query copy-pasted in 6 files.
+        \item Hardcoded URLs and API keys in source code.
+        \item Feature change requires edits in 12 files.
+    \end{enumerate}
+
+    \pause
+    \vspace{0.2cm}
+    \begin{alertblock}{Debrief}
+        Compare rankings with another pair. If rankings differ, justify using risk and effort.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Debt Triage: Example Ranking}
+    \scriptsize
+    \centering
+    \rowcolors{2}{gray!10}{white}
+    \begin{tabular}{p{0.20\textwidth} p{0.12\textwidth} p{0.14\textwidth} p{0.08\textwidth} p{0.28\textwidth}}
+        \rowcolor{blue!20}
+        \textbf{Item} & \textbf{Severity} & \textbf{Interest} & \textbf{Rank} & \textbf{First Step} \\
+        Hardcoded URLs and API keys & Critical & Very high & 1 & Move secrets/config out of code; rotate exposed keys \\
+        Feature change touches 12 files & High & Very high & 2 & Centralize the scattered behavior behind one abstraction \\
+        400-line auth + DB + API function & High & Very high & 3 & Add tests, then extract one responsibility at a time \\
+        Same SQL query in 6 files & Medium--High & High & 4 & Replace copy-paste with one shared query helper/service \\
+    \end{tabular}
+
+    \vspace{0.2cm}
+    \textbf{Rule of thumb:} Prioritize immediate security/operational risk first, then debt that makes every future change expensive.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -452,6 +662,100 @@ def save_telemetry_to_db(percentage):
     \textit{Behavior is identical. Readability, security (SQL injection fix), and testability are drastically improved.}
 \end{frame}
 
+\begin{frame}[fragile]
+    \frametitle{Refactoring Example: Guard Clauses}
+    \textbf{The Smell:} High Cyclomatic Complexity (Nested Ifs).
+    
+    \begin{minted}[bgcolor=red!5, fontsize=\scriptsize]{python}
+# BEFORE REFACTORING
+def calculate_score(distance, battery):
+    if distance > 0:
+        if battery > 0:
+            return (distance * 10) / battery
+        else:
+            return 0
+    else:
+        return 0
+    \end{minted}
+    \pause
+    % \vspace{0.2cm}
+    \textbf{The Fix:} Use \textbf{Guard Clauses}. Invert the logic to check for the error/edge cases first, return early, and keep the "happy path" totally flat at the bottom!
+
+    \begin{minted}[bgcolor=green!5, fontsize=\scriptsize]{python}
+# AFTER REFACTORING
+def calculate_score(distance, battery):
+    # Guard clauses reject bad data immediately
+    if distance <= 0 or battery <= 0:
+        return 0
+        
+    # The "Happy Path" is no longer nested!
+    return (distance * 10) / battery
+    \end{minted}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+    \frametitle{Framework Smells}
+    Sometimes code is perfectly valid Python, but it ignores the powerful tools provided by your chosen framework. This is a "Framework Smell."
+    
+    \vspace{0.2cm}
+    \textbf{Example in FastAPI:} Manually parsing dictionaries instead of using Pydantic Models.
+    
+    \begin{minted}[bgcolor=red!5, fontsize=\scriptsize]{python}
+# BAD: Manual parsing and validation
+@app.post("/api/data")
+def receive_data(data: dict):
+    if "speed" not in data or type(data["speed"]) is not int:
+        raise HTTPException(status_code=400)
+    speed = data["speed"]
+    \end{minted}
+    \pause
+    \begin{minted}[bgcolor=green!5, fontsize=\scriptsize]{python}
+# GOOD: Let Pydantic do the heavy lifting!
+class RobotData(BaseModel):
+    speed: int
+
+@app.post("/api/data")
+def receive_data(data: RobotData):
+    speed = data.speed # Guaranteed to be an integer!
+    \end{minted}
+\end{frame}
+
+% \begin{frame}
+%     \frametitle{Knowledge Check: Pick the Best Refactoring}
+%     \small
+%     \textbf{Scenario:} You find this pattern in 5 files: same validation logic copied with tiny differences.
+
+%     \vspace{0.2cm}
+%     \textbf{What is the best first move?}
+%     \begin{enumerate}
+%         \item A) Rewrite the whole subsystem from scratch
+%         \item B) Extract shared validation into one helper/module
+%         \item C) Leave it as-is until a major release
+%         \item D) Add more comments above each duplicate block
+%     \end{enumerate}
+
+%     \pause
+%     \vspace{0.2cm}
+%     \begin{alertblock}{Answer: B}
+%         This removes duplication, lowers bug-fix effort, and keeps behavior unchanged.
+%     \end{alertblock}
+% \end{frame}
+
+\begin{frame}
+    \frametitle{Refactoring Pitfalls to Avoid}
+    \begin{itemize}
+        \item \textbf{Big-bang refactor:} Huge changes with no checkpoints are high risk.
+        \item \textbf{Refactoring without tests:} You cannot prove behavior stayed the same.
+        \item \textbf{"Cosmetic only" changes:} Renaming everything without reducing complexity gives little value.
+        \item \textbf{No documentation of intent:} If there is no issue/commit message, teams repeat the same mistakes.
+    \end{itemize}
+
+    \vspace{0.2cm}
+    \textbf{Professional habit:} Link each refactor to a concrete pain point (bug frequency, delivery delay, onboarding friction).
+\end{frame}
+
 
 \begin{frame}
     \frametitle{When should you refactor?}
@@ -469,18 +773,18 @@ def save_telemetry_to_db(percentage):
 \section{Next Steps}
 %------------------------------------------------------------
 
-\begin{frame}
-    \frametitle{This Week's Lab: Paying off your Debt}
-    You have been building your Assessment 1 codebase for several weeks now. It is highly likely you have accumulated Technical Debt.
+% \begin{frame}
+%     \frametitle{This Week's Lab: Paying off your Debt}
+%     You have been building your Assessment 1 codebase for several weeks now. It is highly likely you have accumulated Technical Debt.
     
-    \vspace{0.3cm}
-    In the workshop, you will:
-    \begin{itemize}
-        \item \textbf{Task 1: Static Analysis:} Install and run a static analysis tool (like SonarLint, ESLint, or Pylint) on your repository to automatically detect Code Smells.
-        \item \textbf{Task 2: Identification:} Identify at least 3 major instances of Technical Debt in your own code.
-        \item \textbf{Task 3: Refactoring:} Apply formal refactoring techniques to clean the code, ensuring your automated CI tests still pass afterward!
-    \end{itemize}
-\end{frame}
+%     \vspace{0.3cm}
+%     In the workshop, you will:
+%     \begin{itemize}
+%         \item \textbf{Task 1: Static Analysis:} Install and run a static analysis tool (like SonarLint, ESLint, or Pylint) on your repository to automatically detect Code Smells.
+%         \item \textbf{Task 2: Identification:} Identify at least 3 major instances of Technical Debt in your own code.
+%         \item \textbf{Task 3: Refactoring:} Apply formal refactoring techniques to clean the code, ensuring your automated CI tests still pass afterward!
+%     \end{itemize}
+% \end{frame}
 
 \begin{frame}
     \frametitle{Reading \& Resources}
@@ -488,8 +792,14 @@ def save_telemetry_to_db(percentage):
         \item \textbf{Recommended Reading:} 
         Sommerville, \textit{Software Engineering 9th Edition}, Chapter 9 (Software Evolution).
         \item \textbf{Refactoring: Improving the Design of Existing Code} by Martin Fowler (The definitive guide to Code Smells and Refactoring techniques). \url{https://github.com/pratik0197/books/blob/master/software-dev/Refactoring\%20\%20Improving\%20the\%20Design\%20of\%20Existing\%20Code.pdf}
-        \item \textbf{Refactoring.Guru:} An excellent, visual website detailing dozens of specific code smells and how to fix them.
+        % \item \textbf{Refactoring.Guru:} A visual website detailing dozens of specific code smells and how to fix them.
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textbf{Next Lecture:} Release Management \& Continuous Deployment 
+    \end{center}
 \end{frame}
 
 \begin{frame}

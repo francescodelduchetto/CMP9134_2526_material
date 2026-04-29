@@ -1,0 +1,191 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% Geometry setup
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{CMP9134: Software Engineering}}
+\rhead{\textbf{Week 12}}
+\lfoot{University of Lincoln}
+\rfoot{Page \thepage}
+
+% Color definitions
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%   TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{center}
+    \LARGE \textbf{Lab Sheet 12: Legacy Code \& Complex Refactoring} \\
+    \vspace{0.5cm}
+    \large \textbf{Objectives}
+\end{center}
+
+\noindent By completing today's workshop, you will:
+\begin{itemize}
+    \item Fetch a highly complex "legacy" module and wire it into your existing API.
+    \item Manually identify \textbf{Code Smells} and \textbf{Vulnerabilities} (SQL Injection, High Cyclomatic Complexity).
+    \item Achieve \textbf{100\% Branch Coverage} using PyTest before altering any production code.
+    \item Apply advanced refactoring techniques (Guard Clauses, Pydantic Models).
+    \item Implement \textbf{Cloud Static Analysis} using GitHub Actions.
+\end{itemize}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Introduction: Inheriting the Mess}
+In the real world, you rarely start from a blank slate. You usually inherit code written by developers who were rushing to meet deadlines. Today, we simulate this. A former team member wrote a "Mission Statistics" module. It works, but it suffers from high cyclomatic complexity, framework misuse, and duplicated logic. You will download this patch, wire it into your application, lock in its behavior with tests, and refactor it into clean, professional engineering.
+
+%----------------------------------------------------------------------------------------
+%   TASK 1
+%----------------------------------------------------------------------------------------
+
+\section*{Task 1: Fetching \& Wiring the Legacy Code}
+
+\textbf{Goal:} Download the legacy patch and connect it to your main FastAPI application.
+
+\textbf{The Concept:} Because you created your repository from a template, your Git history is detached from the module leader's updates. Instead of a messy Git merge, you will use the terminal to download the raw Python file directly from the source.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Open your Assessment 1 repository in VS Code (using the DevContainer).
+    \item Open your terminal, navigate into your backend folder, and download the legacy file using \texttt{curl}:
+    \begin{minted}[bgcolor=lightgray, fontsize=\scriptsize]{bash}
+cd backend
+curl -O \
+  https://raw.githubusercontent.com/UoL-SoCS/CMP9134_2526_template/main/backend/legacy_stats.py
+    \end{minted}
+    % \textit{(Note: If the lecturer provides a different URL, use that one instead!)}
+    \item You now have \texttt{legacy\_stats.py} in your folder. Do not edit it yet!
+    \item \textbf{Wire it up:} Open your \texttt{backend/main.py} file. You must attach this new module to your live server by adding two lines:
+    \begin{itemize}
+        \item Near the top of the file, add: \texttt{from legacy\_stats import router as legacy\_router}
+        \item Further down (after \texttt{app = FastAPI()}), add: \texttt{app.include\_router(legacy\_router)}
+    \end{itemize}
+    \item Check your browser at \texttt{http://localhost:8000/docs}. You should see the new \texttt{/api/mission\_stats} endpoint appear!
+    \item What does this endpoint do? Look at the \texttt{legacy\_stats.py} file and read through the \texttt{calc\_stats} function. You can use the "Try it out" feature in the Swagger UI to experiment with different inputs and see how it behaves. This will help you understand the code before you start refactoring it.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 2
+%----------------------------------------------------------------------------------------
+
+\section*{Task 2: Code Review (Identifying Smells)}
+
+\textbf{Goal:} Spot the architectural, logical, and framework flaws in the inherited snippet.
+
+\textbf{The Concept:} Before changing code, you must understand why it is bad. Look for the Code Smells discussed in the lecture, as well as poor use of the FastAPI framework.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Create a new file called \texttt{DEBT\_LOG.md} in the root of your repository.
+    \item Open \texttt{legacy\_stats.py} and read through the \texttt{calc\_stats} function.
+    \item Write down at least \textbf{four distinct "Code Smells"} you can spot. For each, explain \textit{why} it is bad.
+    \item \textit{Hints:} 
+    \begin{itemize}
+        \item Look at the \texttt{try/except KeyError} block. How should a FastAPI application handle incoming JSON validation automatically?
+        \item Look at the nested \texttt{if d > 0 and b > 0:} blocks. This is high "Cyclomatic Complexity."
+        \item Look at the database query string. What critical security flaw exists here?
+    \end{itemize}
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 3
+%----------------------------------------------------------------------------------------
+
+\section*{Task 3: Locking Behavior (100\% Branch Coverage)}
+
+\textbf{Goal:} Write regression tests to cover every possible path through the messy code.
+
+\textbf{Note:} This assumes you have completed the previous workshop and have a working test suite set up with PyTest.
+
+\textbf{The Concept:} Because this code is highly nested, a single "Happy Path" test is not enough. You must write tests that trigger the errors, the zero-division checks, and the score capping.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Open your \texttt{backend/tests/test\_api.py} file. 
+    \item Write at least \textbf{four different tests} for this specific endpoint. You must cover:
+    \begin{itemize}
+        \item A successful Recon mission (Type 1).
+        \item A successful Transport mission with a heavy payload (Type 2, Payload $>$ 50).
+        \item A request missing the "batt" key (Expect a 400 error).
+        \item A mission where the calculated score exceeds 100 (Verify it caps at 100).
+    \end{itemize}
+    \item Run \texttt{pytest tests/ -v} to ensure all tests pass. \textit{Do not proceed until you have a green test suite!}
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 4
+%----------------------------------------------------------------------------------------
+
+\section*{Task 4: Advanced Refactoring}
+
+\textbf{Goal:} Fix the code without breaking the application's behavior.
+
+\textbf{The Concept:} Now that your tests are guarding you, you can tear the code apart.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item \textbf{Fix the Validation:} Delete the \texttt{data: dict} parameter and the \texttt{try/except} block. Replace it with a Pydantic \texttt{BaseModel} class. Let FastAPI do the validation for you!
+    \item \textbf{Flatten the Nested Ifs:} Use "Guard Clauses." Check for invalid data upfront and return early, rather than nesting the success logic deep inside an \texttt{if} block.
+    \item \textbf{Extract the Duplication:} Move the score capping logic (\texttt{if score > 100: score = 100}) into a one-line helper function or use Python's \texttt{min()} function.
+    \item \textbf{Verify:} Run \texttt{pytest tests/} again. If the tests still pass, you successfully refactored a highly complex function into clean code!
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 5
+%----------------------------------------------------------------------------------------
+
+\section*{Task 5: Cloud Static Analysis (Linting)}
+
+\textbf{Goal:} Force your GitHub Actions pipeline to reject messy code automatically.
+
+\textbf{The Concept:} We can add a "Linter" (\texttt{flake8}) to your Continuous Integration pipeline. If a team member tries to push poorly formatted code with syntax errors or unused variables in the future, the pipeline will fail.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Open your existing GitHub Actions workflow file (e.g., \texttt{.github/workflows/ci.yml}).
+    \item Find the \texttt{test} job. Just before the step that runs \texttt{pytest}, add this new step:
+    \begin{minted}[bgcolor=lightgray, fontsize=\scriptsize]{yaml}
+      - name: Static Analysis (Linting)
+        run: |
+          pip install flake8
+          flake8 ./backend --count --max-complexity=5 --show-source --statistics
+\end{minted}
+    \item Commit your refactored code and this updated YAML file. Push to GitHub.
+    \item Check your Actions tab on GitHub. Your CI pipeline now acts as an automated guard against syntax-level Technical Debt!
+    \item Check for any linting errors in your Github Actions. If you see any, fix them and push again until the pipeline is green.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   RESOURCES
+%----------------------------------------------------------------------------------------
+
+\section*{Further Resources}
+
+\begin{itemize}
+    \item \textbf{Refactoring.Guru - Guard Clauses:} \href{https://refactoring.guru/replace-nested-conditional-with-guard-clauses}{refactoring.guru} - \textit{How to flatten nested if-statements.}
+    \item \textbf{Pydantic Documentation:} \href{https://docs.pydantic.dev/latest/}{docs.pydantic.dev} - \textit{How to replace manual dict parsing with robust models.}
+    \item \textbf{Flake8 Command-Line Arguments:} \href{https://flake8.pycqa.org/en/latest/user/options.html}{flake8.pycqa.org/en/latest/user/options.html} - \textit{Official documentation for the flags used in Task 5 (like \texttt{--max-complexity} and \texttt{--select}).}
+\end{itemize}
+
+\end{document}

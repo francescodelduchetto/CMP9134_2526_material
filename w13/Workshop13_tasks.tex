@@ -1,0 +1,195 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% Geometry setup
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{CMP9134: Software Engineering}}
+\rhead{\textbf{Week 13}}
+\lfoot{University of Lincoln}
+\rfoot{Page \thepage}
+
+% Color definitions
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%   TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{center}
+    \LARGE \textbf{Lab Sheet 13: Release Management \& CD} \\
+    \vspace{0.5cm}
+    \large \textbf{Objectives}
+\end{center}
+
+\noindent By completing today's workshop, you will:
+\begin{itemize}
+    \item Apply \textbf{Semantic Versioning (SemVer)} to real-world project scenarios.
+    \item Create annotated \textbf{Git Tags} and publish formal \textbf{GitHub Releases}.
+    \item Implement \textbf{Feature Flags} to decouple deployment from release in your backend.
+    \item Upgrade your CI pipeline to perform \textbf{Continuous Delivery (CD)} by pushing Docker images to a registry.
+\end{itemize}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Introduction: Shipping the Product}
+For the past few weeks, you have focused on testing and refactoring your Ground Control Station codebase to ensure it is robust and clean. Today, we shift our focus from \textit{building} the software to \textit{releasing} it safely. You will learn how to bookmark specific versions of your code, hide unfinished features in production, and automate the delivery of your Docker containers.
+
+%----------------------------------------------------------------------------------------
+%   TASK 1
+%----------------------------------------------------------------------------------------
+
+\section*{Task 1: Semantic Versioning Scenarios}
+
+\textbf{Goal:} Practice determining the correct SemVer numbers.
+
+\textbf{The Concept:} Semantic Versioning (\textbf{MAJOR.MINOR.PATCH}) communicates the exact nature of an update to other developers and users.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Create a file named \texttt{RELEASES.md} in your repository.
+    \item Assume the current live version of your Ground Control Station API is \textbf{\texttt{v1.2.3}}.
+    \item In your markdown file, write down what the \textbf{next version number} should be for each of the following independent scenarios, and briefly explain \textit{why}:
+    \begin{itemize}
+        \item \textbf{Scenario A:} You fix a bug where the robot crashed if the battery percentage dropped below zero. The API inputs/outputs stay exactly the same.
+        \item \textbf{Scenario B:} You add a brand new \texttt{/api/history} endpoint to retrieve past mission logs. All old endpoints work perfectly.
+        \item \textbf{Scenario C:} You completely redesign the JSON payload required for the \texttt{/api/move} endpoint. If old frontends try to send the old payload, they will receive a 422 Validation Error.
+    \end{itemize}
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 2
+%----------------------------------------------------------------------------------------
+
+\section*{Task 2: Git Tagging \& GitHub Releases}
+
+\textbf{Goal:} Create a formal, immutable snapshot of your codebase.
+
+\textbf{The Concept:} A Git Tag bookmarks a specific commit. GitHub takes that tag and allows you to attach release notes, creating a formal "Release" that users can download.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Open your DevContainer terminal and ensure you are on the \texttt{main} branch and all your tests are passing.
+    \item Create an annotated Git tag for your first major release:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{bash}
+git tag -a v1.0.0 -m "Initial Release of the Ground Control Station"
+    \end{minted}
+    \item Push the tag to GitHub (Note: \texttt{git push} does not push tags by default!):
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{bash}
+git push origin v1.0.0
+    \end{minted}
+    \item Go to your repository on GitHub.com. On the right-hand sidebar, click on \textbf{Releases}.
+    \item Click \textbf{Draft a new release}.
+    \item Select your \texttt{v1.0.0} tag from the dropdown. Click \textbf{Generate release notes} to automatically populate the description with your recent pull requests/commits.
+    \item Click \textbf{Publish release}. You now have a formal version of your software!
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 3
+%----------------------------------------------------------------------------------------
+
+\section*{Task 3: Implementing Feature Flags}
+
+\textbf{Goal:} Deploy unfinished code to production without breaking the app for users.
+
+\textbf{The Concept:} We use environment variables to toggle features on and off dynamically. 
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Open your backend \texttt{main.py} file.
+    \item Add Python's \texttt{os} module to read an environment variable. We convert the string to a boolean for easy \texttt{if} statement logic:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{python}
+import os
+
+# Read the feature flag, defaulting to "false" if not set
+ENABLE_ADVANCED_STATS = os.getenv(
+    "FF_ADVANCED_STATS", "false"
+).lower() == "true"
+    \end{minted}
+    \item Create a new endpoint wrapped in the Feature Flag:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{python}
+@app.get("/api/experimental_stats")
+def get_experimental_stats():
+    if not ENABLE_ADVANCED_STATS:
+        return {"error": "Feature not yet available."}, 404
+        
+    return {"status": "success", "data": "Top secret advanced stats!"}
+    \end{minted}
+    \item \textbf{Test it:} Open your FastAPI docs (\texttt{http://localhost:8000/docs}). Try the endpoint. It should fail.
+    \item Open your \texttt{docker-compose.yml} file, find your backend service, and add the environment variable to turn it on:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{yaml}
+    environment:
+      - FF_ADVANCED_STATS=true
+    \end{minted}
+    \item Rebuild your containers (\texttt{docker compose up -d}). The feature is now active!
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 4 (STRETCH)
+%----------------------------------------------------------------------------------------
+
+\section*{Task 4 (Distinction Stretch): Continuous Delivery to GHCR}
+
+\textbf{Goal:} Automate the creation of production-ready Docker artifacts.
+
+\textbf{The Concept:} Currently, your GitHub Actions pipeline tests your code (CI). We will add a step to automatically build and push your Docker image to the \textbf{GitHub Container Registry (GHCR)} \textit{only} when you push a new \texttt{v*.*.*} tag.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item Open your existing GitHub Actions workflow file (\texttt{.github/workflows/ci.yml}).
+    \item At the very bottom of the file, add a new step to login and push to the registry. GitHub Actions automatically provides the \texttt{GITHUB\_TOKEN} you need for authentication!
+    \begin{minted}[bgcolor=lightgray, fontsize=\scriptsize]{yaml}
+      - name: Log in to the Container registry
+        # Only run this step if the push is a semantic version tag!
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          push: true
+          tags: ghcr.io/${{ github.repository }}/backend:${{ github.ref_name }}
+    \end{minted}
+    \item \textit{Note: You may need to update the \texttt{permissions:} block at the top of your YAML file to include \texttt{packages: write}.}
+    \item Commit and push this change to \texttt{main}. 
+    \item Now, create and push a new tag: \texttt{git tag v1.1.0} then \texttt{git push origin v1.1.0}.
+    \item Watch your GitHub Actions pipeline. When it finishes, you will see a compiled Docker image appear in the "Packages" section of your GitHub repository!
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   RESOURCES
+%----------------------------------------------------------------------------------------
+
+\section*{Further Resources}
+
+\begin{itemize}
+    \item \textbf{Semantic Versioning Specs:} \href{https://semver.org/}{semver.org} - \textit{The official 11-point rulebook for SemVer.}
+    \item \textbf{GitHub Packages Documentation:} \href{https://docs.github.com/en/packages}{docs.github.com/en/packages} - \textit{Learn how to manage and pull containers from GHCR.}
+    \item \textbf{Martin Fowler on Feature Toggles:} \href{https://martinfowler.com/articles/FeatureToggles.html}{martinfowler.com} - \textit{Deep dive into different types of feature flags.}
+\end{itemize}
+
+\end{document}
