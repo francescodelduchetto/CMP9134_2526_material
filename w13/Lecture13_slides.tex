@@ -117,8 +117,8 @@
     \begin{enumerate}
         \item \textbf{Apply} Semantic Versioning (SemVer) to track software releases.
         \item \textbf{Differentiate} between Continuous Delivery and Continuous Deployment (CD).
-        \item \textbf{Evaluate} advanced deployment strategies (Blue/Green, Canary Releases).
-        \item \textbf{Decouple} deployment from release using Feature Flags.
+        \item \textbf{Evaluate} deployment mechanics (Blue/Green, Canary Releases).
+        \item \textbf{Control} feature exposure using Feature Flags (release control).
     \end{enumerate}
 \end{frame}
 
@@ -255,7 +255,7 @@ git push origin v1.5.0
 \end{frame}
 
 %------------------------------------------------------------
-\section{Deployment Strategies}
+\section{Deployment Mechanics}
 %------------------------------------------------------------
 
 \begin{frame}
@@ -335,16 +335,18 @@ git push origin v1.5.0
     \frametitle{Canary vs. Blue/Green: When to Use Each?}
     \small
     \begin{center}
-    \rowcolors{2}{gray!15}{white}
     \begin{tabular}{p{3.5cm} p{3cm} p{3cm}}
         \hline
         \rowcolor{gray!30}
         \textbf{Situation} & \textbf{Blue/Green} & \textbf{Canary} \\
         \hline
+        \rowcolor{gray!15}
         Database schema changes & \textcolor{green!60!black}{\textbf{Often preferred}} & \textcolor{red}{\textbf{Higher risk}} \\
         Gradual confidence building & Harder & \textcolor{green!60!black}{\textbf{Well-suited}} \\
+        \rowcolor{gray!15}
         Instant rollback needed & \textcolor{green!60!black}{\textbf{Fast (single switch)}} & Slower (dial back) \\
         Infrastructure cost & Higher (2 envs) & Lower \\
+        \rowcolor{gray!15}
         User-facing A/B testing & Less common & \textcolor{green!60!black}{\textbf{Common}} \\
         \hline
     \end{tabular}
@@ -376,7 +378,7 @@ git push origin v1.5.0
 \end{frame}
 
 %------------------------------------------------------------
-\section{Feature Flags}
+\section{Release Control with Feature Flags}
 %------------------------------------------------------------
 
 \begin{frame}
@@ -441,6 +443,24 @@ def get_dashboard_data():
     \end{block}
 \end{frame}
 
+\begin{frame}
+    \frametitle{How They Combine in Practice}
+    \small
+    Deployment mechanics and feature flags are strongest when used together.
+
+    \vspace{0.2cm}
+    \begin{itemize}
+        \item \textbf{Canary + Flags:} Send 5\% traffic to V2, but keep risky features off by default. Enable per cohort as confidence grows.
+        \item \textbf{Blue/Green + Flags:} Switch infrastructure instantly, then progressively enable new features without redeploying.
+        \item \textbf{Dark Launch + Flags:} Deploy code to production, keep UI hidden, and validate behavior/metrics before public release.
+    \end{itemize}
+
+    \vspace{0.2cm}
+    \begin{block}{Operational Safety Net}
+        Keep a \textbf{kill switch} flag for high-risk functionality so you can disable exposure quickly while investigating incidents.
+    \end{block}
+\end{frame}
+
 %------------------------------------------------------------
 \section{Next Steps}
 %------------------------------------------------------------
@@ -455,8 +475,8 @@ def get_dashboard_data():
     ]
         \node[box, draw=blue!70, fill=blue!10]   (ver)   at (0, 0)    {Versioning\\(SemVer + Tags)};
         \node[box, draw=orange!80, fill=orange!10] (cd)  at (4, 0)    {CD Pipeline\\(Delivery vs Deploy)};
-        \node[box, draw=green!70!black, fill=green!10] (strat) at (8, 0) {Deploy\\Strategies};
-        \node[box, draw=purple!70, fill=purple!10] (ff)  at (4, -2.2) {Feature Flags\\(Deploy $\neq$ Release)};
+        \node[box, draw=green!70!black, fill=green!10] (strat) at (8, 0) {Deployment\\Mechanics};
+        \node[box, draw=purple!70, fill=purple!10] (ff)  at (4, -2.2) {Release Control\\(Feature Flags)};
 
         \draw[arrow] (ver) -- (cd) node[midway, above, font=\scriptsize] {triggers};
         \draw[arrow] (cd) -- (strat) node[midway, above, font=\scriptsize] {uses};
@@ -479,33 +499,23 @@ def get_dashboard_data():
     \end{itemize}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Reading \& Resources}
-    \begin{itemize}
-        \item \textbf{Semantic Versioning Specs:} \url{https://semver.org/} --- \textit{The official 11-point rulebook for SemVer.}
-        \item \textbf{Martin Fowler on Feature Toggles:} \url{https://martinfowler.com/articles/FeatureToggles.html}
-        \item \textbf{GitHub Documentation:} \textit{Managing Releases in a Repository.}
-    \end{itemize}
-\end{frame}
+% \begin{frame}
+%     \frametitle{Reading \& Resources}
+%     \begin{itemize}
+%         \item \textbf{Semantic Versioning Specs:} \url{https://semver.org/} --- \textit{The official 11-point rulebook for SemVer.}
+%         % \item \textbf{Martin Fowler on Feature Toggles:} \url{https://martinfowler.com/articles/FeatureToggles.html}
+%         \item \textbf{GitHub Documentation:} \textit{Managing Releases in a Repository.}
+%     \end{itemize}
+% \end{frame}
 
 % EXPANDED next-lecture slide
 \begin{frame}
-    \frametitle{Next Lecture: LEPSI, Security \& Professional Practice}
-    \begin{block}{What is LEPSI?}
-        The \textbf{Legislation, Ethics, Privacy, Security, and IP} framework that every software engineer is legally and professionally obligated to understand before shipping real software.
-    \end{block}
-
-    \vspace{0.3cm}
-    We will cover:
-    \begin{itemize}
-        \item GDPR and data protection obligations for your GCS.
-        \item Secure coding practices and common vulnerabilities (OWASP Top 10).
-        \item Intellectual property: open-source licences and what you can legally ship.
-        \item Professional codes of conduct (BCS).
-    \end{itemize}
-
-    \vspace{0.2cm}
-    \textit{Think about: does your Ground Control Station store any personal or location data? What are your obligations?}
+    \frametitle{Next Lecture}
+    
+    
+    \begin{center}
+        \textbf{LEPSI, Security \& Professional Practice}
+    \end{center}
 \end{frame}
 
 \begin{frame}
