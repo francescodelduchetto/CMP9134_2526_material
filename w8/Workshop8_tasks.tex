@@ -39,6 +39,8 @@
     \item Write functional \textbf{Unit Tests} for your backend application logic.
     \item Implement \textbf{Integration Tests} to verify your API routes and Dockerized service communication.
     \item Automate your testing strategy by building a \textbf{Continuous Integration (CI)} pipeline using GitHub Actions.
+    \item Architect an isolated \textbf{Test Container} to run tests without altering development data.
+    \item Integrate your test container into the template repository's existing CI workflow and Docker Compose setup.
 \end{itemize}
 
 \vspace{0.5cm}
@@ -48,13 +50,13 @@
 \section*{Introduction: Securing your Codebase}
 In Assessment 1, you are building a critical system (a Robot Ground Control Station). You must ensure that users cannot bypass Role-Based Access Control (RBAC) and that invalid coordinates are not sent to the physical (or virtual) robot. Manual testing is too slow. Today, you will establish an automated testing safety net.
 
-\textit{Note: The examples below use Python and \texttt{pytest}. If you are building a Node.js backend, you should adapt these concepts using \texttt{Jest} or \texttt{Mocha}.}
+\textit{Note: The examples below use Python and \texttt{pytest}. If you are building a Node.js, a C\#, or any other language backend, you should adapt these concepts using \texttt{Jest}/\texttt{Mocha}, \texttt{MSTest}, etc.}
 
 %----------------------------------------------------------------------------------------
 %   TASK 1
 %----------------------------------------------------------------------------------------
 
-\section*{Task 1: Writing Unit Tests (The Base of the Pyramid)}
+\section*{Task 1: Writing Unit Tests}
 
 \textbf{Goal:} Test small, isolated pieces of your application logic.
 
@@ -87,7 +89,8 @@ def test_valid_coordinates():
     assert result_good == True
     assert result_bad == False
     \end{minted}
-    \item Run your test locally in the terminal (e.g., by typing \texttt{pytest} or \texttt{npm test}). Ensure it passes.
+    \item Run your test locally in the terminal (e.g., by typing \texttt{pytest}, \texttt{npm test}, or something else based on the language you are using). Ensure it passes.
+    \item Once this first simple example is working, write at least 6 more unit tests covering edge cases of some \textit{actual functionalities} you have implemented in your backend code (e.g., coordinates at the boundaries, non-integer inputs, etc.).
 \end{enumerate}
 
 %----------------------------------------------------------------------------------------
@@ -99,6 +102,8 @@ def test_valid_coordinates():
 \textbf{Goal:} Test that your web server responds correctly to HTTP requests.
 
 \textbf{The Concept:} Integration tests ensure that the routing and request handling work. For instance, if someone tries to hit your \texttt{/api/move} endpoint without an authentication token, it should reject them.
+
+\textit{NOTE: the fastapi library is not installed on the lab PCs (and cannot be installed due to admin restrictions). However, this is installed inside the Docker container. You can write these tests in your local environment and they will run correctly inside the container during CI.}
 
 \vspace{0.3cm}
 \textbf{Action:}
@@ -119,6 +124,7 @@ def test_unauthorized_move():
     assert response.status_code == 401
     \end{minted}
     \item \textbf{Extend the Test:} Write a second test that passes a valid "Viewer" role token. Assert that the API returns a \texttt{403 Forbidden} (because Viewers cannot move the robot).
+    \item Implement two additional tests for a feature of your choice (e.g., a successful move command with an "Operator" token, or a failed move due to invalid coordinates).
 \end{enumerate}
 
 %----------------------------------------------------------------------------------------
@@ -192,6 +198,65 @@ jobs:
 \end{enumerate}
 
 %----------------------------------------------------------------------------------------
+%   TASK 5
+%----------------------------------------------------------------------------------------
+
+\section*{Task 5: Architectural Upgrade - The Test Container}
+
+\textbf{Goal:} Create a dedicated Docker container specifically for executing your test suite safely.
+
+\textbf{The Concept:} In Task 3, you ran tests directly on the GitHub server. However, last week you learned about Containerisation. To ensure your tests run in the exact same environment as production, we will create a Docker Compose override file that spins up a special \texttt{test-runner} container.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item In the \textbf{root} of your repository (where your main \texttt{docker-compose.yml} lives), create a new file named \texttt{docker-compose.test.yml}.
+    \item Add the following configuration to define your Test Container:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{yaml}
+version: '3.8'
+
+services:
+  test-runner:
+    build: ./backend
+    # Override the normal server command to run your test framework instead!
+    command: pytest tests/ -v
+    depends_on:
+      - backend
+    \end{minted}
+    \item \textbf{Test it locally:} In your terminal, run the following command to spin up your test container alongside your stack:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{bash}
+docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm test-runner
+    \end{minted}
+    \item You should see Docker build the container, execute your test files, print the results, and automatically destroy the container (\texttt{--rm}).
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+%   TASK 6
+%----------------------------------------------------------------------------------------
+
+\section*{Task 6: Integrating into the Template's CI}
+
+\textbf{Goal:} Modify the \texttt{CMP9134\_2526\_template} repository's existing GitHub Actions pipeline to use your new Test Container.
+
+\textbf{The Concept:} Your template repository from Week 7 likely already came with a workflow file. Let's upgrade it to use Docker Compose for testing instead of bare-metal Python.
+
+\vspace{0.3cm}
+\textbf{Action:}
+\begin{enumerate}
+    \item In VS Code, navigate to the template's original CI YAML file (look inside \texttt{.github/workflows/}).
+    \item Scroll down to the \texttt{test} job where the containers are started.
+    \item Add a new step to run your test container using the Docker Compose command you tested in Task 5:
+    \begin{minted}[bgcolor=lightgray, fontsize=\small]{yaml}
+      - name: Run Dockerized Test Suite
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.test.yml \
+          run --rm test-runner
+    \end{minted}
+    \item \textbf{Commit and Push:} Save your changes and push them to GitHub. 
+    \item Go back to the \textbf{Actions} tab on GitHub. You should now see your tests running safely \textit{inside} the containerized environment! If a test fails, the container will return an error code and properly block the CI pipeline.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
 %   RESOURCES
 %----------------------------------------------------------------------------------------
 
@@ -200,7 +265,7 @@ jobs:
 \begin{itemize}
     \item \textbf{PyTest Documentation:} \href{https://docs.pytest.org/en/7.3.x/}{docs.pytest.org} - \textit{The standard testing framework for Python.}
     \item \textbf{Jest Documentation:} \href{https://jestjs.io/}{jestjs.io} - \textit{A delightful JavaScript Testing Framework with a focus on simplicity.}
-    \item \textbf{GitHub Actions Quickstart:} \href{https://docs.github.com/en/actions/quickstart}{docs.github.com/en/actions} - \textit{Official guide to setting up automated workflows.}
+    \item \textbf{Docker Compose Overrides:} \href{https://docs.docker.com/compose/compose-file/13-merge/}{docs.docker.com/compose} - \textit{Learn how to merge multiple compose files for different environments.}
 \end{itemize}
 
 \end{document}

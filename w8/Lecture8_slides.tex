@@ -11,7 +11,7 @@
         \usebeamerfont{section in head/foot}
         \hspace{0.5cm}
         \ifnum\insertframenumber<30
-            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 123456}}
+            \raisebox{-1pt}[0pt][0pt]{\normalsize\textbf{Attendance Code: 041039}}
         \fi
         \hspace{0.5cm}
     \end{beamercolorbox}
@@ -304,6 +304,30 @@
     \end{block}
 \end{frame}
 
+
+\begin{frame}
+    \frametitle{Testing Types: Functional vs. Non-Functional}
+    \footnotesize    
+    \begin{block}{Functional Testing}
+        Validates the software against functional requirements. "Does it do what it is supposed to do?"
+        \begin{itemize}
+            \item \textbf{Unit Testing:} Testing individual functions/methods in isolation.
+            \item \textbf{Smoke Testing:} A shallow, rapid test of crucial functions to see if the build is totally broken before spending time on deep testing.
+            \item \textbf{Regression Testing:} Re-running old tests to ensure a new feature didn't break an old feature. (Automated tests make this painless).
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Non-Functional Testing}
+        Evaluates the operational characteristics. "How well does it do it?"
+        \begin{itemize}
+            \item \textbf{Load/Performance Testing:} Pushing thousands of simulated users to see when the server crashes.
+            \item \textbf{Security Testing:} Penetration testing, checking for SQL injections.
+            \item \textbf{Usability Testing:} HCI checks (as discussed in Week 6).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
 %------------------------------------------------------------
 \section{Test Design Techniques}
 %------------------------------------------------------------
@@ -421,6 +445,17 @@
     \textit{Industry standard typically mandates at least 80\% Statement and Branch coverage for production software.}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Grey-Box Testing}
+    \textbf{Definition:} A hybrid approach where the tester has partial knowledge of the internal workings of the system. This allows for more informed test design than pure black-box testing, while still treating the system as a "black box" from a user's perspective.
+
+    \begin{itemize}
+        \item \textbf{Use Case:} When testing a third-party API or a legacy system where you have access to some documentation or code snippets, but not the full source code.
+        \item \textbf{Example:} You know that a certain API endpoint interacts with a database, so you design tests that specifically target database-related edge cases (e.g., SQL injection attempts) without having access to the actual database schema.
+        \item \textbf{Benefits:} More efficient test design than black-box, while still maintaining a level of abstraction that simulates real-world usage.
+    \end{itemize}
+\end{frame}
+
 %------------------------------------------------------------
 \section{Writing Tests \& Mocking}
 %------------------------------------------------------------
@@ -497,30 +532,9 @@ def test_move_physical_robot(mock_post):
     \textit{Mocking is absolutely essential for testing modern Microservices and Containerised environments!}
 \end{frame}
 
-%------------------------------------------------------------
-\section{Testing Types}
-%------------------------------------------------------------
-
-\begin{frame}
-    \frametitle{Testing Types: Functional vs. Non-Functional}
-    \footnotesize    
-    \begin{block}{Functional Testing}
-        Validates the software against functional requirements. "Does it do what it is supposed to do?"
-        \begin{itemize}
-            \item \textbf{Smoke Testing:} A shallow, rapid test of crucial functions to see if the build is totally broken before spending time on deep testing.
-            \item \textbf{Regression Testing:} Re-running old tests to ensure a new feature didn't break an old feature. (Automated tests make this painless).
-        \end{itemize}
-    \end{block}
-    
-    \begin{block}{Non-Functional Testing}
-        Evaluates the operational characteristics. "How well does it do it?"
-        \begin{itemize}
-            \item \textbf{Load/Performance Testing:} Pushing thousands of simulated users to see when the server crashes.
-            \item \textbf{Security Testing:} Penetration testing, checking for SQL injections.
-            \item \textbf{Usability Testing:} HCI checks (as discussed in Week 6).
-        \end{itemize}
-    \end{block}
-\end{frame}
+% %------------------------------------------------------------
+% \section{Testing Types}
+% %------------------------------------------------------------
 
 %------------------------------------------------------------
 \section{Test Automation \& CI/CD}
@@ -587,16 +601,16 @@ def test_move_physical_robot(mock_post):
 \section{Next Steps}
 %------------------------------------------------------------
 
-\begin{frame}
-    \frametitle{This Week's Lab: Writing Tests \& CI}
-    In the workshop, you will move from theory to practice by implementing automated testing for your Assessment 1 Robot Management System.
+% \begin{frame}
+%     \frametitle{This Week's Lab: Writing Tests \& CI}
+%     In the workshop, you will move from theory to practice by implementing automated testing for your Assessment 1 Robot Management System.
     
-    \begin{itemize}
-        \item \textbf{Task 1: Unit Testing:} Write isolated tests for your backend logic using Boundary Value Analysis.
-        \item \textbf{Task 2: API Integration Testing:} Write tests to verify your backend routes return the correct HTTP status codes when handling authorization logic.
-        \item \textbf{Task 3: GitHub Actions CI:} Create a YAML pipeline to automatically build your Docker containers and run your tests every time you push to your repository.
-    \end{itemize}
-\end{frame}
+%     \begin{itemize}
+%         \item \textbf{Task 1: Unit Testing:} Write isolated tests for your backend logic using Boundary Value Analysis.
+%         \item \textbf{Task 2: API Integration Testing:} Write tests to verify your backend routes return the correct HTTP status codes when handling authorization logic.
+%         \item \textbf{Task 3: GitHub Actions CI:} Create a YAML pipeline to automatically build your Docker containers and run your tests every time you push to your repository.
+%     \end{itemize}
+% \end{frame}
 
 \begin{frame}
     \frametitle{Reading \& Resources}
@@ -607,6 +621,16 @@ def test_move_physical_robot(mock_post):
         \item \textbf{PyTest / Jest Documentation:} Industry standards for writing tests in Python and JavaScript.
         \item \textbf{GitHub Actions Docs:} Review the syntax for creating your own CI/CD \texttt{.yml} workflows.
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Next Lecture}
+
+    \begin{center}
+        \normalsize \textbf{Easter Break + Reading Week: No lectures for the next three weeks!}\\\vspace{0.5cm}
+        \normalsize Use this time to catch up on readings and work on your assessment!\\\vspace{0.5cm}
+        \textbf{Next Lecture:} DevOps \& CI/CD (24th April).
+    \end{center}
 \end{frame}
 
 \begin{frame}
